@@ -8,12 +8,6 @@ def landing():
     print('test landing page')
     return render_template('Home.html')
 
-#Home page return
-@app.route('/Home')
-def home():
-    print('test home return')
-    return render_template("Home.html")
-
 #Infomation page
 @app.route('/Information')
 def infomation():
