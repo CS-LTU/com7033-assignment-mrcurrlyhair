@@ -15,16 +15,16 @@ def home():
     return render_template("Home.html")
 
 #Infomation page
-@app.route('/Infomation')
+@app.route('/Information')
 def infomation():
-    print('test infomation')
-    return render_template("Infomation.html")
+    print('test information')
+    return render_template("Information.html")
 
-#About page
-@app.route('/About')
-def about():
-    print('test about page')
-    return render_template('About.html')
+#Sign up page
+@app.route('/Signup')
+def Signup():
+    print('test sing up page')
+    return render_template('Signup.html')
 
 #Login page
 @app.route('/Login')
