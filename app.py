@@ -1,6 +1,12 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
+#importing database 
 app = Flask(__name__, static_folder='static')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'Database.db'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = FALSE 
+db = SQLAlchemy(app)
+
 
 #Landing page
 @app.route('/')
@@ -14,11 +20,18 @@ def infomation():
     print('test information')
     return render_template("Information.html")
 
-#Sign up page
-@app.route('/Signup')
+#Sign up page 
+@app.route('/Signup', methods=['GET', 'POST'])
 def Signup():
+
+
+
     print('test sing up page')
     return render_template('Signup.html')
+
+
+
+
 
 #Login page
 @app.route('/Login')
