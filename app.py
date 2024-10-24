@@ -3,10 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 #importing database 
 app = Flask(__name__, static_folder='static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'Database.db'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = FALSE 
-db = SQLAlchemy(app)
-
 
 #Landing page
 @app.route('/')
