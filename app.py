@@ -19,14 +19,8 @@ def infomation():
 #Sign up page 
 @app.route('/Signup', methods=['GET', 'POST'])
 def Signup():
-
-
-
     print('test sing up page')
     return render_template('Signup.html')
-
-
-
 
 
 #Login page
@@ -34,7 +28,6 @@ def Signup():
 def Login():
     print('test Login page')
     return render_template("Login.html")
-
 
 
 if __name__ == '__main__':
