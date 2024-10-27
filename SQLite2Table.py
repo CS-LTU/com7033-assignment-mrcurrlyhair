@@ -13,7 +13,7 @@ con = sqlite3.connect(db_path)
 con.execute('PRAGMA foreign_keys = ON;')
 cur = con.cursor()
 
-#Creating the table for patient infoimation 
+#Creating the table for patient login
 cur.execute('''
     CREATE TABLE IF NOT EXISTS user(
         id INTEGER AUTO_INCREMENT PRIMARY KEY,
