@@ -133,6 +133,19 @@ for i in range(patient_count):
 #close the file 
 csv_file.close()
 
+#linking table 
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS patient_user_link (
+        link_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        patient_id INTEGER,
+        user_id INTEGER,
+        FOREIGN KEY (patient_id) REFERENCES patient(p_id),
+        FOREIGN KEY (user_id) REFERENCES user(u_id)
+    )
+''')
+
+
+
 # upload changes
 con.commit()
 
