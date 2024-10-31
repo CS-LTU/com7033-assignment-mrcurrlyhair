@@ -4,17 +4,17 @@ import csv
 import random
 import string
 
-# File paths 
+# file paths 
 mdb_path = "mongodb://localhost:27017/"
 sqlite_db_path = "Database.db"
 csv_path = "healthcare-dataset-stroke-data.csv"
 
-# Connect to MongoDB
+# connect to MongoDB
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
 user_collection = db["user"]
 
-# Connect to SQLite
+# connect to SQLite
 sqlite_con = sqlite3.connect(sqlite_db_path)
 sqlite_cur = sqlite_con.cursor()
 
@@ -45,21 +45,32 @@ def gen_username(lenght=18):
 def gen_password(length=8):
     return "".join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
 
-# Getting the number of patients from the SQLite patient table
-sqlite_cur.execute("SELECT COUNT(*) FROM patient")
-patient_count = sqlite_cur.fetchone()[0]
+# get p_id from SQLite
+def get_patient_ids():
+    sqlite_cur.execute("SELECT p_id FROM patient")
+    return [row[0] for row in sqlite_cur.fetchall()]
 
-# Inserting username, passwords, and user ID generated for each patient
+# SQL p_ids
+patient_ids = get_patient_ids()
+
+# checking exisiting users
+existing_user_ids = [user["u_id"] for user in user_collection.find({}, {"u_id": 1})]
+
+# generate and insert user/pass 
 user_records = []
-for i in range(patient_count):
-    user_id = i + 1
-    username = gen_username()
-    password = gen_password()
-    user_records.append({"u_id": user_id, "u_username": username, "u_password": password})
+for p_id in patient_ids:
+    if p_id not in existing_user_ids:
+        username = gen_username()
+        password = gen_password()
+        user_records.append({"u_id": p_id, "u_username": username, "u_password": password})
 
+# insert generated user/pass
 if user_records:
     user_collection.insert_many(user_records)
+else:
+    print("Already requested")
 
-# Close connections
+
+# close connections
 sqlite_con.close()
 client.close()
