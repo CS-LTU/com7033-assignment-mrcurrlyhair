@@ -5,7 +5,7 @@ import string
 
 
 # File paths 
-mdb_path = 'mDatabase.db'
+mdb_path = 'mDatabase.json'
 csv_path = 'healthcare-dataset-stroke-data.csv'
 
 

@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-#importing database 
+#need to add coommernt 
 app = Flask(__name__, static_folder='static')
 
 #Landing page
