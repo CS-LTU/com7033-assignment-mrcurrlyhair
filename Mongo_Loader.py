@@ -45,21 +45,17 @@ def gen_username(lenght=18):
 def gen_password(length=8):
     return "".join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
 
-# get p_id from SQLite
+# get p_id from sql_db
 def get_patient_ids():
     sqlite_cur.execute("SELECT p_id FROM patient")
     return [row[0] for row in sqlite_cur.fetchall()]
 
-# SQL p_ids
 patient_ids = get_patient_ids()
-
-# checking exisiting users
-existing_user_ids = [user["u_id"] for user in user_collection.find({}, {"u_id": 1})]
 
 # generate and insert user/pass 
 user_records = []
 for p_id in patient_ids:
-    if p_id not in existing_user_ids:
+    if not user_collection.find_one({"u_id": p_id}):
         username = gen_username()
         password = gen_password()
         user_records.append({"u_id": p_id, "u_username": username, "u_password": password})
