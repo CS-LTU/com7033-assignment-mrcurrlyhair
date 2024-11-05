@@ -7,15 +7,14 @@ import hashlib
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'assignmentdatabase'
 
-# MongoDB setup
+# mongo connection
 mdb_path = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
 user_collection = db["user"]
 
-# SQLite setup
+# sqlite connection
 sqlite_db_path = "Database.db"
-
 def get_sqlite_connection():
     return sqlite3.connect(sqlite_db_path)
 
@@ -25,7 +24,6 @@ def hashing_pass(text):
     hash = hashlib.sha256()
     hash.update(text)
     return hash.hexdigest()
-
 
 # get user info page
 @app.route('/user_info')
@@ -51,33 +49,7 @@ def delete_user(p_id):
     else:
         return jsonify({"message": "User not found."})
 
-# # read all patient records from SQLite
-# @app.route('/get_patients', methods=['GET'])
-# def get_patients():
-#     con = get_sqlite_connection()
-#     cur = con.cursor()
-#     cur.execute("SELECT * FROM patient")
-#     patients = cur.fetchall()
-#     con.close()
-    
-#     patient_list = [
-#         {
-#             "p_id": patient[0],
-#             "p_gender": patient[1],
-#             "p_age": patient[2],
-#             "p_hypertension": patient[3],
-#             "p_heart_disease": patient[4],
-#             "p_ever_married": patient[5],
-#             "p_work_type": patient[6],
-#             "p_residence_type": patient[7],
-#             "p_avg_glucose_level": patient[8],
-#             "p_bmi": patient[9],
-#             "p_smoking_status": patient[10],
-#             "p_stroke": patient[11]
-#         } for patient in patients
-#     ]
-    
-    # return jsonify(patient_list)
+
 
 # home page
 @app.route('/')
@@ -90,6 +62,26 @@ def landing():
 def information():
     print('test information')
     return render_template("Information.html")
+
+#update health info
+@app.route('/update_info', methods=['GET', 'POST'])
+def update_info():
+    if 'user_id' not in session:
+        return redirect(url_for('Login'))
+
+    user_id = session['user_id']
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = hashing_pass(password)
+
+        # Update user info in MongoDB
+        user_collection.update_one({"u_id": user_id}, {"$set": {"u_username": username, "u_password": hashed_password}})
+        return redirect(url_for('user_info'))
+
+    user = user_collection.find_one({"u_id": user_id})
+    return render_template('UpdateInfo.html', user=user)
+
 
 # sign up page
 @app.route('/Signup', methods=['GET', 'POST'])

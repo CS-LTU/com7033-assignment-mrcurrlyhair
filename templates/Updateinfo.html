@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Infomation About Strokes</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <header>
+            <h1> LTU Hospital</h1>
+        </header>
+        
+        <dic class="navbar">
+            <ul>
+                <li><a href="{{ url_for('landing') }}">Home</a></li>
+                <li><a href="{{ url_for('information') }}">Information</a></li>
+                {% if 'user_id' in session %}
+                    <li><a href="{{ url_for('update_info') }}">Update Infomation</a></li>
+                    <li><a href="{{ url_for('user_info') }}">Account</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('Login') }}">Login</a></li>
+                    <li><a href="{{ url_for('Signup') }}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </dic>
+    
+
+
+
+
+    
+    <footer>
+        <p>2024 Database Website | All rights reserved</p>
+    </footer>
+    
+    </body>
+
+
+
+
+</html>
