@@ -83,7 +83,7 @@ button:hover {
     background-color: rgb(255, 223, 200);
     color: #800020;
 }
-/* Username and Password Location */
+/* Login Username and Password Location */
 .login-form {
     background-color: #ffffff;
     padding: 30px;
@@ -122,8 +122,48 @@ button:hover {
 
 .login-form button:hover {
     background-color: #a0002e;
+
+}
+/* Signup Login and Password Location*/
+.signup-form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+    margin: 20px auto;
 }
 
+.signup-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.signup-form input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.signup-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #800020;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.signup-form button:hover {
+    background-color: #a0002e;
+}
 
 
 /* Footer */ 
