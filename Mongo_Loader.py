@@ -3,6 +3,7 @@ import sqlite3
 import csv
 import random
 import string
+import hashlib
 
 # file paths 
 mdb_path = "mongodb://localhost:27017/"
@@ -41,9 +42,19 @@ def gen_username(lenght=18):
     word2 = random.choice(word_list)
     return word1.capitalize() + word2.capitalize()
 
+# hashing variable 
+def hashing_pass(text):
+    text = text.encode('utf-8')
+    hash = hashlib.sha256()
+    hash.update(text)
+    return hash.hexdigest()
+
+
 # generating random password for existing users 
 def gen_password(length=8):
-    return "".join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
+    password = "".join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
+    return hashing_pass(password)
+    
 
 # get p_id from sql_db
 def get_patient_ids():

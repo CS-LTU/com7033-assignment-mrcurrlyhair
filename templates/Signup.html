@@ -12,21 +12,30 @@
         
         <dic class="navbar">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="Information">Information</a></li>
-                <li><a href="Signup">Sign up</a></li>
-                <li><a href="Login">Login</a></li>
+                <li><a href="{{ url_for('landing') }}">Home</a></li>
+                <li><a href="{{ url_for('information') }}">Information</a></li>
+                {% if 'user_id' in session %}
+                    <li><a href="{{ url_for('user_info') }}">Account</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('Login') }}">Login</a></li>
+                    <li><a href="{{ url_for('Signup') }}">Sign Up</a></li>
+                {% endif %}
             </ul>
         </dic>
-    
 
+        <div class="signup-form">
+            <h2>Sign up</h2>
+            <form method="POST" action="{{ url_for('Signup') }}">
+                                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
 
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-
-
-
-
-        
+                <button type="submit">Sign up</button>
+            </form>
+        </div>
     
     
     <footer>

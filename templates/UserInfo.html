@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>admin</title>
+        <title>User</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     
@@ -23,24 +23,14 @@
                 {% endif %}
             </ul>
         </dic>
-    
+        
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <h1>User Information</h1>
+        <p>User ID: {{ user['u_id'] }}</p>
+        <p>Username: {{ user['u_username'] }}</p>
     
     
+
     <footer>
         <p>2024 Database Website | All rights reserved</p>
     </footer>

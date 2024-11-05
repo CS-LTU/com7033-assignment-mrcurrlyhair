@@ -29,16 +29,6 @@ cur.execute('''
     )
 ''')
 
-#Creating the table for patient login
-cur.execute('''
-    CREATE TABLE IF NOT EXISTS user(
-        u_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        u_username TEXT(16),
-        u_password TEXT(16)
-    )
-''')
-
-
 # String to integer / yes and no (may not use)
 def yes_to_one(yesno):
     if yesno.lower() == 'yes':
@@ -51,24 +41,6 @@ def bmi_cleaning(value):
     if value.strip() == '' or value.lower == 'n/a':
         return None
     
-#for username
-word_list = [
-    'apple', 'banana', 'cherry', 'dragon', 'eagle', 'falcon', 'grape', 'honey', 'island', 'jungle',
-    'kiwi', 'lemon', 'mango', 'night', 'orange', 'peach', 'queen', 'river', 'stone', 'tiger',
-    'amber', 'breeze', 'crystal', 'dawn', 'ember', 'forest', 'galaxy', 'hazel', 'ivy', 'jade',
-    'kelp', 'lotus', 'mist', 'nebula', 'oasis', 'pearl', 'quartz', 'rose', 'shadow', 'thunder',
-    'unity', 'violet', 'whisper', 'yonder', 'zenith', 'aurora', 'blizzard', 'cascade', 'delight', 
-    'echo', 'frost', 'glow', 'harbor', 'infinity', 'jasmine', 'kestrel', 'lilac', 'meadow', 
-    'nebula', 'ocean', 'petal', 'quiver', 'raven', 'sky', 'twilight', 'uplift', 'voyage', 
-    'wild', 'zen', 'autumn', 'birch', 'canyon', 'daisy', 'ever', 'fern', 'glacier', 'horizon', 
-    'iris', 'jewel', 'knight', 'lunar', 'mystic', 'nova', 'opal', 'prairie', 'quail', 'ripple', 
-    'sparrow', 'trek', 'umbra', 'vortex', 'willow', 'yarrow', 'zephyr', 'brave', 'clover', 
-    'dandelion', 'fable', 'grace', 'haven', 'ignite', 'journey', 'kindle', 'legend', 'mirth', 
-    'nectar', 'oracle', 'pioneer', 'quest', 'radiant', 'serene', 'tempest', 'unity', 'valor', 
-    'wander', 'xenon', 'yule'
-]
-
-
 # testing opening csv 
 with open(csv_path) as csv_file:
     table = csv.reader(csv_file)
@@ -104,47 +76,8 @@ with open(csv_path) as csv_file:
                 bool(int(row[11])),     # stroke
             ))
 
-
-# generating random username for existing users 
-def gen_username(lenght =18):
-    word1 = random.choice(word_list)
-    word2 = random.choice(word_list)
-    return word1.capitalize() + word2.capitalize()
-
-# generating random password for existing users 
-def gen_password(length=8):
-    return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
-
-
-# getting the amount of rows from pateint  
-cur.execute('SELECT COUNT(*) FROM patient')
-patient_count = cur.fetchone()[0]
-
-
-#inputting username and passwords generated 
-for i in range(patient_count): 
-    username = gen_username()
-    password = gen_password()
-    cur.execute('''
-        INSERT INTO user (u_username, u_password)
-        VALUES (?, ?)
-    ''', (username, password))
-
 #close the file 
 csv_file.close()
-
-#linking table 
-cur.execute('''
-    CREATE TABLE IF NOT EXISTS patient_user_link (
-        link_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        patient_id INTEGER,
-        user_id INTEGER,
-        FOREIGN KEY (patient_id) REFERENCES patient(p_id),
-        FOREIGN KEY (user_id) REFERENCES user(u_id)
-    )
-''')
-
-
 
 # upload changes
 con.commit()

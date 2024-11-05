@@ -12,10 +12,16 @@
         
         <dic class="navbar">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="Information">Information</a></li>
-                <li><a href="Signup">Sign up</a></li>
-                <li><a href="Login">Login</a></li>
+                <li><a href="{{ url_for('landing') }}">Home</a></li>
+                <li><a href="{{ url_for('information') }}">Information</a></li>
+                {% if 'user_id' in session %}
+                    <li><a href="{{ url_for('update_info') }}">Update Infomation</a></li>
+                    <li><a href="{{ url_for('user_info') }}">Account</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('Login') }}">Login</a></li>
+                    <li><a href="{{ url_for('Signup') }}">Sign Up</a></li>
+                {% endif %}
             </ul>
         </dic>
     
