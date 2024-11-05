@@ -5,6 +5,7 @@ body, html {
     font-family: 'Helvetica Neue', Arial, sans-serif; 
     background-color: rgb(250, 235, 215); 
     color: #800020; 
+    display: inline;
 }
 
 /* Navbar Styling */
@@ -54,6 +55,7 @@ h1 {
 h2 {
     font-size: 30px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 /* Paragraphs */
@@ -61,6 +63,8 @@ p {
     font-size: 20px;
     line-height: 1.5;
     margin-bottom: 20px;
+    padding-left: 50px;
+    text-align: center;
 }
 
 /* Buttons */
@@ -79,6 +83,47 @@ button:hover {
     background-color: rgb(255, 223, 200);
     color: #800020;
 }
+/* Username and Password Location */
+.login-form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+    margin: 20px auto;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #800020;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-form button:hover {
+    background-color: #a0002e;
+}
+
 
 
 /* Footer */ 

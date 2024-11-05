@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>User</title>
+        <title>Login</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
-    
+
     <body>
         <header>
             <h1> LTU Hospital</h1>
@@ -24,16 +24,24 @@
                 {% endif %}
             </ul>
         </dic>
-        
 
-        <h2>Account Information</h2>
-        <p>User ID: {{ user['u_id'] }}</p>
-        <p>Username: {{ user['u_username'] }}</p>
-    
-    
+        <div class="login-form">
+            <h2>Login</h2>
+            <h3>Wrong Username or Password</h3>
+            <form method="POST" action="{{ url_for('Login') }}">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
 
     <footer>
-        <p1>2024 Database Website | All rights reserved</p1>
+        <p>2024 Database Website | All rights reserved</p>
     </footer>
     
     </body>

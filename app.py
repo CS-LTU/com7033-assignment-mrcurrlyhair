@@ -133,10 +133,30 @@ def Login():
             session['user_id'] = user['u_id']
             return redirect(url_for('user_info'))
         else:
-            return "Invalid username or password. Please try again."
+            return redirect(url_for('Login_fail'))
 
     print('test Login page')
     return render_template("Login.html")
+
+# login faliure page
+@app.route('/Loginfail', methods=['GET', 'POST'])
+def Login_fail():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = hashing_pass(password)
+
+        # does user/pass match
+        user = user_collection.find_one({"u_username": username, "u_password": hashed_password})
+        if user:
+            session['user_id'] = user['u_id']
+            return redirect(url_for('user_info'))
+        else:
+            return redirect(url_for('Login_fail'))
+    print('test Login page')
+    return render_template("LoginFail.html")
+
+
 
 # logout page
 @app.route('/logout')
