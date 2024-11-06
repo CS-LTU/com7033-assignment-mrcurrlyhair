@@ -10,7 +10,7 @@
             <h1> LTU Hospital</h1>
         </header>
         
-        <dic class="navbar">
+        <div class="navbar">
             <ul>
                 <li><a href="{{ url_for('landing') }}">Home</a></li>
                 <li><a href="{{ url_for('information') }}">Information</a></li>
@@ -23,7 +23,8 @@
                     <li><a href="{{ url_for('Signup') }}">Sign Up</a></li>
                 {% endif %}
             </ul>
-        </dic>
+        </div>
+
         <div class="signup-form">
             <h2>Sign up</h2>
             <form method="POST" action="{{ url_for('Signup') }}">
