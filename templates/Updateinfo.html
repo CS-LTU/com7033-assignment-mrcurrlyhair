@@ -24,10 +24,43 @@
                 {% endif %}
             </ul>
         </div>
+ 
+        <div class="form-container">
+            <h1>Update Infomation</h1>
+            <form action="{{ url_for('update_info') }}" method="POST">
+                <div class="section-title">Basic Information</div>
+                <label for="p_age">Age:</label>
+                <input type="number" id="p_age" name="p_age" value="{{ patient[2] }}" required>
     
-
-
-
+                <label for="p_ever_married">Ever Married (Yes/No):</label>
+                <input type="text" id="p_ever_married" name="p_ever_married" value="{{ patient[5] }}" required>
+    
+                <div class="section-title">Health Details</div>
+                <label for="p_hypertension">Hypertension (0 = No, 1 = Yes):</label>
+                <input type="number" id="p_hypertension" name="p_hypertension" value="{{ patient[3] }}" required>
+    
+                <label for="p_heart_disease">Heart Disease (0 = No, 1 = Yes):</label>
+                <input type="number" id="p_heart_disease" name="p_heart_disease" value="{{ patient[4] }}" required>
+    
+                <label for="p_avg_glucose_level">Average Glucose Level:</label>
+                <input type="number" step="0.1" id="p_avg_glucose_level" name="p_avg_glucose_level" value="{{ patient[8] }}" required>
+    
+                <label for="p_bmi">BMI:</label>
+                <input type="number" step="0.1" id="p_bmi" name="p_bmi" value="{{ patient[9] }}" required>
+    
+                <div class="section-title">Lifestyle</div>
+                <label for="p_work_type">Work Type:</label>
+                <input type="text" id="p_work_type" name="p_work_type" value="{{ patient[6] }}" required>
+    
+                <label for="p_residence_type">Residence Type:</label>
+                <input type="text" id="p_residence_type" name="p_residence_type" value="{{ patient[7] }}" required>
+    
+                <label for="p_smoking_status">Smoking Status:</label>
+                <input type="text" id="p_smoking_status" name="p_smoking_status" value="{{ patient[10] }}" required>
+    
+                <button type="submit">Update Information</button>
+            </form>
+        </div>
 
     
     <footer>

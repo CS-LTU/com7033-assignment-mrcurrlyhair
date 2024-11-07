@@ -70,17 +70,44 @@ def update_info():
         return redirect(url_for('Login'))
 
     user_id = session['user_id']
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        hashed_password = hashing_pass(password)
 
-        # Update user info in MongoDB
-        user_collection.update_one({"u_id": user_id}, {"$set": {"u_username": username, "u_password": hashed_password}})
+    if request.method == 'POST':
+        # Get updated information from the form
+        p_age = request.form['p_age']
+        p_hypertension = request.form['p_hypertension']
+        p_heart_disease = request.form['p_heart_disease']
+        p_ever_married = request.form['p_ever_married']
+        p_work_type = request.form['p_work_type']
+        p_residence_type = request.form['p_residence_type']
+        p_avg_glucose_level = request.form['p_avg_glucose_level']
+        p_bmi = request.form['p_bmi']
+        p_smoking_status = request.form['p_smoking_status']
+
+        # Update the patient record in SQLite
+        con = get_sqlite_connection()
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE patient
+            SET p_age = ?, p_hypertension = ?, p_heart_disease = ?, p_ever_married = ?, 
+                p_work_type = ?, p_residence_type = ?, p_avg_glucose_level = ?, 
+                p_bmi = ?, p_smoking_status = ?
+            WHERE p_id = ?
+        """, (p_age, p_hypertension, p_heart_disease, p_ever_married, p_work_type, 
+              p_residence_type, p_avg_glucose_level, p_bmi, p_smoking_status, user_id))
+        con.commit()
+        con.close()
+
         return redirect(url_for('user_info'))
 
-    user = user_collection.find_one({"u_id": user_id})
-    return render_template('UpdateInfo.html', user=user)
+    # Fetch current patient info
+    con = get_sqlite_connection()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM patient WHERE p_id = ?", (user_id,))
+    patient_info = cur.fetchone()
+    con.close()
+
+    # Pass the current patient info to the template
+    return render_template('UpdateInfo.html', patient=patient_info)
 
 
 # sign up page
