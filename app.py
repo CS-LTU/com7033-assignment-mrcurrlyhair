@@ -32,11 +32,21 @@ def user_info():
         return redirect(url_for('Login'))
 
     user_id = session['user_id']
+
+    # fetch patient from MongoDB
     user = user_collection.find_one({"u_id": user_id})
-    if user:
-        return render_template("UserInfo.html", user=user)
+
+    # fetch patient from sql
+    con = get_sqlite_connection()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM patient WHERE p_id = ?", (user_id,))
+    patient_info = cur.fetchone()
+    con.close()
+
+    if user and patient_info:
+        return render_template("UserInfo.html", user=user, patient=patient_info)
     else:
-        return "User not found."
+        return "User or patient information not found."
 
 
 
@@ -72,7 +82,8 @@ def update_info():
     user_id = session['user_id']
 
     if request.method == 'POST':
-        # Get updated information from the form
+        # get updated information from form
+        p_gender = request.form['p_gender']
         p_age = request.form['p_age']
         p_hypertension = request.form['p_hypertension']
         p_heart_disease = request.form['p_heart_disease']
@@ -83,30 +94,30 @@ def update_info():
         p_bmi = request.form['p_bmi']
         p_smoking_status = request.form['p_smoking_status']
 
-        # Update the patient record in SQLite
+        # update the patient record 
         con = get_sqlite_connection()
         cur = con.cursor()
         cur.execute("""
             UPDATE patient
-            SET p_age = ?, p_hypertension = ?, p_heart_disease = ?, p_ever_married = ?, 
+            SET p_gender = ?, p_age = ?, p_hypertension = ?, p_heart_disease = ?, p_ever_married = ?, 
                 p_work_type = ?, p_residence_type = ?, p_avg_glucose_level = ?, 
                 p_bmi = ?, p_smoking_status = ?
             WHERE p_id = ?
-        """, (p_age, p_hypertension, p_heart_disease, p_ever_married, p_work_type, 
+        """, (p_gender, p_age, p_hypertension, p_heart_disease, p_ever_married, p_work_type, 
               p_residence_type, p_avg_glucose_level, p_bmi, p_smoking_status, user_id))
         con.commit()
         con.close()
 
         return redirect(url_for('user_info'))
 
-    # Fetch current patient info
+    # get current patient info
     con = get_sqlite_connection()
     cur = con.cursor()
     cur.execute("SELECT * FROM patient WHERE p_id = ?", (user_id,))
     patient_info = cur.fetchone()
     con.close()
 
-    # Pass the current patient info to the template
+    # change the current patient info to the template
     return render_template('UpdateInfo.html', patient=patient_info)
 
 

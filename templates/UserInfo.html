@@ -27,8 +27,18 @@
         
 
         <h2>Account Information</h2>
-        <p>User ID: {{ user['u_id'] }}</p>
-        <p>Username: {{ user['u_username'] }}</p>
+        <div class="account-info">
+            <p><strong>Gender:</strong> {{ patient[1] }}</p>
+            <p><strong>Age:</strong> {{ patient[2] }}</p>
+            <p><strong>Hypertension:</strong> {{ "Yes" if patient[3] == 1 else "No" }}</p>
+            <p><strong>Heart Disease:</strong> {{ "Yes" if patient[4] == 1 else "No" }}</p>
+            <p><strong>Ever Married:</strong> {{ patient[5] }}</p>
+            <p><strong>Work Type:</strong> {{ patient[6] }}</p>
+            <p><strong>Residence Type:</strong> {{ patient[7] }}</p>
+            <p><strong>Average Glucose Level:</strong> {{ patient[8] }}</p>
+            <p><strong>BMI:</strong> {{ patient[9] }}</p>
+            <p><strong>Smoking Status:</strong> {{ patient[10] }}</p>
+        </div>
     
     
 

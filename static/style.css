@@ -118,6 +118,7 @@ button:hover {
 .form-container button,
 .login-form button,
 .signup-form button {
+    margin-top: 20px;
     width: 100%;
     padding: 10px;
     background-color: #800020;
@@ -141,6 +142,42 @@ button:hover {
     font-size: 18px;
     color: #800020;
 }
+
+/*  Styling for dropdown boxes */
+select {
+    background-color: #FAEBD7;
+    color: #800020; 
+    border: 2px solid #800020;
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Styling for dropdown boxes */
+select option {
+    background-color: #FAEBD7;
+    color: #800020;
+}
+
+/* Focus and hover effects for dropdown */
+select:focus, select:hover {
+    border-color: #A03040; 
+    box-shadow: 0 0 5px rgba(128, 0, 32, 0.5); 
+}
+
+/* Disabled state for dropdowns */
+select:disabled {
+    background-color: #A08090;
+    color: #FAEBD7;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
 
 /* Footer Styling */
 footer {
