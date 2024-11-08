@@ -49,18 +49,6 @@ def user_info():
         return "User or patient information not found."
 
 
-
-# delete a user
-@app.route('/delete_user/<p_id>', methods=['DELETE'])
-def delete_user(p_id):
-    result = user_collection.delete_one({"u_id": p_id})
-    if result.deleted_count > 0:
-        return jsonify({"message": "User deleted successfully."})
-    else:
-        return jsonify({"message": "User not found."})
-
-
-
 # home page
 @app.route('/')
 def landing():
@@ -164,41 +152,6 @@ def Signup():
     
     return render_template('Signup.html')
 
-# sign up fail page
-@app.route('/Signupfail', methods=['GET', 'POST'])
-def Signupfail():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        hashed_password = hashing_pass(password)
-
-        # maximum +1 in sql p_id
-        con = get_sqlite_connection()
-        cur = con.cursor()
-        cur.execute("SELECT MAX(p_id) FROM patient")
-        max_p_id = cur.fetchone()[0]
-        new_p_id = max_p_id + 1 if max_p_id is not None else 1
-        con.close()
-
-        # does user exist?
-        if user_collection.find_one({"u_username": username}):
-            return redirect(url_for('Signupfail'))
-
-        # insert user mongo
-        user_collection.insert_one({"u_id": new_p_id, "u_username": username, "u_password": hashed_password})
-        
-        #create user sql
-        con = get_sqlite_connection()
-        cur = con.cursor()
-        cur.execute("INSERT INTO patient (p_id, p_gender, p_age, p_hypertension, p_heart_disease, p_ever_married, p_work_type, p_residence_type, p_avg_glucose_level, p_bmi, p_smoking_status, p_stroke) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-                    (new_p_id, 'Unknown', 0, 0, 0, 'No', 'Unknown', 'Unknown', 0.0, 0.0, 'Unknown', 0))
-        con.commit()
-        con.close()
-
-        return redirect(url_for('Login'))
-    
-    return render_template('Signupfail.html')
-
 
 # login page
 @app.route('/Login', methods=['GET', 'POST'])
@@ -228,8 +181,37 @@ def Login():
 # logout page
 @app.route('/logout')
 def logout():
-    session.clear()  # Clear all session data
-    return redirect(url_for('landing'))  # Redirect to home page
+    session.clear()  # clear all session data
+    flash("Successfully logged out ")
+    return redirect(url_for('Login'))  # redirect to home page
+
+
+# delete account route
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    if 'user_id' not in session:
+        return redirect(url_for('Login'))
+
+    user_id = session['user_id']
+
+    # delete from MongoDB
+    user_collection.delete_one({"u_id": user_id})
+
+    # delete from SQLite
+    con = get_sqlite_connection()
+    cur = con.cursor()
+    cur.execute("DELETE FROM patient WHERE p_id = ?", (user_id,))
+    con.commit()
+    con.close()
+
+    # clear session and redirect to home page
+    session.clear()
+    flash("Account deleted successfully.")
+    return redirect(url_for('Login'))
+
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

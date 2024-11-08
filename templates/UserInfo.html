@@ -40,12 +40,16 @@
             <p><strong>BMI:</strong> {{ patient[9] }}</p>
             <p><strong>Smoking Status:</strong> {{ patient[10] }}</p>
         </div>
-    
+        <div class="delete-button-container">
+            <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
+            <button type="submit" class="delete-button">Delete Account</button>
+             </form>
+        </div>
     
 
-    <footer>
+        <footer>
         <p>2024 Database Website | All rights reserved</p>
-    </footer>
+        </footer>
     
     </body>
 
