@@ -9,7 +9,8 @@
         <header>
             <h1> LTU Hospital</h1>
         </header>
-        
+
+        <!-- nav bar -->
         <div class="navbar">
             <ul>
                 <li><a href="{{ url_for('landing') }}">Home</a></li>
@@ -24,17 +25,31 @@
                 {% endif %}
             </ul>
         </div>
-
+        <!-- error splash screen -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
+        
+        <!-- sign up box-->
         <div class="signup-form">
             <h2>Sign up</h2>
-            <form method="POST" action="{{ url_for('Signup') }}">
-                                <label for="username">Username:</label>
+            <form action="{{ url_for('Signup') }}" method="POST">
+                <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
-
+        
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
-
-                <button type="submit">Sign up</button>
+        
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+        
+                <button type="submit">Sign Up</button>
             </form>
         </div>
     

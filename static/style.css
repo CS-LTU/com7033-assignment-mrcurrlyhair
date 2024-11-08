@@ -177,6 +177,12 @@ select:disabled {
     cursor: not-allowed;
 }
 
+/* Error splash screen */
+.alert {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
 
 
 /* Footer Styling */

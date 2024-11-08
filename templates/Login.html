@@ -10,6 +10,7 @@
             <h1> LTU Hospital</h1>
         </header>
         
+        <!-- nav bar -->
         <div class="navbar">
             <ul>
                 <li><a href="{{ url_for('landing') }}">Home</a></li>
@@ -25,6 +26,18 @@
             </ul>
         </div>
 
+        <!-- for error splash screen-->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
+  
+          <!-- login box -->
         <div class="login-form">
             <h2>Login</h2>
             <form method="POST" action="{{ url_for('Login') }}">

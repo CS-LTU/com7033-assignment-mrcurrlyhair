@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, session, redirect, url_for, abort 
+from flask import Flask, request, jsonify, render_template, session, redirect, url_for, abort, request, flash, get_flashed_messages  
 import pymongo
 import sqlite3
 import hashlib
@@ -127,7 +127,13 @@ def Signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']
         hashed_password = hashing_pass(password)
+
+        # does both passwords match 
+        if password != confirm_password:
+            flash("Passwords do not match. Please try again.")
+            return redirect(url_for('Signup'))
 
         # maximum +1 in sql p_id
         con = get_sqlite_connection()
@@ -139,7 +145,8 @@ def Signup():
 
         # does user exist?
         if user_collection.find_one({"u_username": username}):
-            return redirect(url_for('Signupfail'))
+            flash("Username already exists. Please choose a different one.")
+            return redirect(url_for('Signup'))
 
         # insert user mongo
         user_collection.insert_one({"u_id": new_p_id, "u_username": username, "u_password": hashed_password})
@@ -152,6 +159,7 @@ def Signup():
         con.commit()
         con.close()
 
+        flash("Account created successfully. Please log in.")
         return redirect(url_for('Login'))
     
     return render_template('Signup.html')
@@ -198,37 +206,23 @@ def Login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        hashed_password = hashing_pass(password)
 
-        # does user/pass match
-        user = user_collection.find_one({"u_username": username, "u_password": hashed_password})
-        if user:
+        #  find patient in mongodb
+        user = user_collection.find_one({"u_username": username})
+
+        # unhashing password
+        hashed_input_password = hashing_pass(password)
+
+        # checking if patient is registers and is password correct
+        if user and user['u_password'] == hashed_input_password:
             session['user_id'] = user['u_id']
             return redirect(url_for('user_info'))
         else:
-            return redirect(url_for('Login_fail'))
+            # error splash screen 
+            flash("Wrong username/password. Please try again.")
+            return redirect(url_for('Login'))
 
-    print('test Login page')
-    return render_template("Login.html")
-
-# login faliure page
-@app.route('/Loginfail', methods=['GET', 'POST'])
-def Login_fail():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        hashed_password = hashing_pass(password)
-
-        # does user/pass match
-        user = user_collection.find_one({"u_username": username, "u_password": hashed_password})
-        if user:
-            session['user_id'] = user['u_id']
-            return redirect(url_for('user_info'))
-        else:
-            return redirect(url_for('Login_fail'))
-    print('test Login page')
-    return render_template("LoginFail.html")
-
+    return render_template('Login.html')
 
 
 # logout page
