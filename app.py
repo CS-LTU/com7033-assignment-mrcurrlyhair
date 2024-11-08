@@ -166,10 +166,15 @@ def Login():
         # unhashing password
         hashed_input_password = hashing_pass(password)
 
-        # checking if patient is registers and is password correct
+        # checking if patient is registers and is password correct/ checking if admin 
         if user and user['u_password'] == hashed_input_password:
             session['user_id'] = user['u_id']
-            return redirect(url_for('user_info'))
+            session['is_admin'] = user.get('is_admin', False)  # Set admin flag in session
+            if session['is_admin']:
+                return redirect(url_for('admin'))  # Redirect to admin page if user is admin
+            else:
+                flash("Patients cannot log in here. Please contact admin.")
+                return redirect(url_for('Login'))
         else:
             # error splash screen 
             flash("Wrong username/password. Please try again.")
@@ -189,7 +194,7 @@ def logout():
 # delete account route
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
-    if 'user_id' not in session:
+    if 'user_id' not in session or not session.get('is_admin'):
         return redirect(url_for('Login'))
 
     user_id = session['user_id']
@@ -207,7 +212,39 @@ def delete_account():
     # clear session and redirect to home page
     session.clear()
     flash("Account deleted successfully.")
-    return redirect(url_for('Login'))
+    if is_admin:
+        return redirect(url_for('admin'))
+    else:
+        return redirect(url_for('Login'))
+
+
+
+@app.route('/admin', methods=['GET'])
+def admin():
+    if 'user_id' not in session or not session.get('is_admin'):
+        return redirect(url_for('Login'))
+    
+    # Fetch users from MongoDB
+    users = list(user_collection.find({}, {"_id": 0, "u_id": 1, "u_username": 1}))
+    
+    # Fetch patients from SQLite
+    con = get_sqlite_connection()
+    cur = con.cursor()
+    cur.execute("SELECT p_id, p_gender, p_age FROM patient")
+    patients = cur.fetchall()
+    con.close()
+    
+    return render_template('Admin.html', users=users, patients=patients)
+
+
+
+
+
+
+
+
+
+
 
 
 
