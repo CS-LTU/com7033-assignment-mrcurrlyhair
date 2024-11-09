@@ -47,6 +47,7 @@ def user_info():
         return render_template("UserInfo.html", user=user, patient=patient_info)
     else:
         default_user = {
+            "u_id": user_id,
             "u_username": user.get("u_username", "N/A") if user else "N/A"
         }
         default_patient = (
@@ -183,7 +184,7 @@ def Login():
             else:
                 return redirect(url_for('user_info'))  
         else:
-            # Error flash message
+            # error splash screen 
             flash("Wrong username/password. Please try again.")
             return redirect(url_for('Login'))
 

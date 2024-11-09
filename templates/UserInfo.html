@@ -29,6 +29,7 @@
 
         <h2>Account Information</h2>
         <div class="account-info">
+            <p><strong>User ID:</strong> {{ user['u_id'] }}</p>
             <p><strong>Gender:</strong> {{ patient[1] }}</p>
             <p><strong>Age:</strong> {{ patient[2] }}</p>
             <p><strong>Hypertension:</strong> {{ "Yes" if patient[3] == 1 else "No" }}</p>
