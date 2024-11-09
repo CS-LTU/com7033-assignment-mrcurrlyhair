@@ -15,19 +15,20 @@ def hashing_pass(text):
     return hash.hexdigest()
 
 
-#admin details
+# admin details
 admin_username = "admin"
-admin_password = "12345678" 
+admin_password = "12345678" #hashing admin password, more important than user passwords
 hashed_password = hashing_pass(admin_password)
 
-#creating admin 
+# creating admin 
 admin_user = {
-    "u_id": 1,  # Ensure this ID is unique
+    "u_id": 1, # Ensuring this u_id is unique as no one else occupies 1 
     "u_username": admin_username,
     "u_password": hashed_password,
     "is_admin": True
 }
-#
+
+# adding admin to mongo 
 try:
     user_collection.insert_one(admin_user)
     print("Admin created")

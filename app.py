@@ -169,9 +169,9 @@ def Login():
         # checking if patient is registers and is password correct/ checking if admin 
         if user and user['u_password'] == hashed_input_password:
             session['user_id'] = user['u_id']
-            session['is_admin'] = user.get('is_admin', False)  # Set admin flag in session
+            session['is_admin'] = user.get('is_admin', False)  # Set admin in session
             if session['is_admin']:
-                return redirect(url_for('admin'))  # Redirect to admin page if user is admin
+                return redirect(url_for('admin'))  # redirect to admin page if user is admin
             else:
                 flash("Patients cannot log in here. Please contact admin.")
                 return redirect(url_for('Login'))
@@ -191,31 +191,72 @@ def logout():
     return redirect(url_for('Login'))  # redirect to home page
 
 
-# delete account route
+# delete account route for patient 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
-    if 'user_id' not in session or not session.get('is_admin'):
+    if 'user_id' not in session:
         return redirect(url_for('Login'))
 
     user_id = session['user_id']
+    is_admin = session.get('is_admin', False)
 
-    # delete from MongoDB
+    # delete from mongo
     user_collection.delete_one({"u_id": user_id})
 
-    # delete from SQLite
+    # delete from sql
     con = get_sqlite_connection()
     cur = con.cursor()
     cur.execute("DELETE FROM patient WHERE p_id = ?", (user_id,))
     con.commit()
     con.close()
 
-    # clear session and redirect to home page
+    # clear session 
     session.clear()
     flash("Account deleted successfully.")
     if is_admin:
         return redirect(url_for('admin'))
     else:
         return redirect(url_for('Login'))
+
+# delete account route for admin 
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        return redirect(url_for('Login'))
+
+    # Delete user from mongo
+    user_collection.delete_one({"u_id": user_id})
+
+    # Delete patient from sql
+    con = get_sqlite_connection()
+    cur = con.cursor()
+    cur.execute("DELETE FROM patient WHERE p_id = ?", (user_id,))
+    con.commit()
+    con.close()
+
+    flash("User deleted successfully.")
+    return redirect(url_for('admin'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -235,17 +276,6 @@ def admin():
     con.close()
     
     return render_template('Admin.html', users=users, patients=patients)
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -207,6 +207,22 @@ select:disabled {
 .delete-button:hover {
     background-color: #f57588; 
 }
+/* Admin table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table, th, td {
+    border: 1px solid #000000; 
+    
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
 
 
 /* Footer Styling */

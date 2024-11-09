@@ -26,54 +26,36 @@
         </div>
         
         <h1>Admin Dashboard</h1>
-        <h2>Users List</h2>
+        <h2>Patient List</h2>
         <table>
             <tr>
                 <th>User ID</th>
                 <th>Username</th>
-            </tr>
-            {% for user in users %}
-            <tr>
-                <td>{{ user['u_id'] }}</td>
-                <td>{{ user['u_username'] }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    
-        <h2>Patients List</h2>
-        <table>
-            <tr>
-                <th>Patient ID</th>
                 <th>Gender</th>
                 <th>Age</th>
+                <th>Delete User</th>
             </tr>
-            {% for patient in patients %}
-            <tr>
-                <td>{{ patient[0] }}</td>
-                <td>{{ patient[1] }}</td>
-                <td>{{ patient[2] }}</td>
-            </tr>
+            {% for user in users %}
+                {% for patient in patients %}
+                    {% if user['u_id'] == patient[0] %}
+                        <tr>
+                            <td>{{ user['u_id'] }}</td>
+                            <td>{{ user['u_username'] }}</td>
+                            <td>{{ patient[1] }}</td>
+                            <td>{{ patient[2] }}</td>
+                            <td>
+                                <div class="delete-button-container">
+                                    <form action="{{ url_for('delete_user', user_id=user['u_id']) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="delete-button">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
         </table>
-    
-        <a href="{{ url_for('logout') }}">Logout</a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
+        <a href="{{ url_for('logout') }}">Logout</a>    
         <footer>
         <p>2024 Database Website | All rights reserved</p>
         </footer>
