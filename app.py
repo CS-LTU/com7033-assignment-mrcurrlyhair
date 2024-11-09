@@ -46,7 +46,14 @@ def user_info():
     if user and patient_info:
         return render_template("UserInfo.html", user=user, patient=patient_info)
     else:
-        return "User or patient information not found."
+        default_user = {
+            "u_username": user.get("u_username", "N/A") if user else "N/A"
+        }
+        default_patient = (
+            patient_info if patient_info else ("N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A")
+        )
+
+        return render_template("UserInfo.html", user=default_user, patient=default_patient)
 
 
 # home page
@@ -160,23 +167,23 @@ def Login():
         username = request.form['username']
         password = request.form['password']
 
-        #  find patient in mongodb
+        # find patient in mongo 
         user = user_collection.find_one({"u_username": username})
 
-        # unhashing password
+        # hashing pass
         hashed_input_password = hashing_pass(password)
 
-        # checking if patient is registers and is password correct/ checking if admin 
+        # does user exist and has a matching pass
         if user and user['u_password'] == hashed_input_password:
             session['user_id'] = user['u_id']
-            session['is_admin'] = user.get('is_admin', False)  # Set admin in session
+            session['is_admin'] = user.get('is_admin', False)  
+
             if session['is_admin']:
-                return redirect(url_for('admin'))  # redirect to admin page if user is admin
+                return redirect(url_for('admin'))  
             else:
-                flash("Patients cannot log in here. Please contact admin.")
-                return redirect(url_for('Login'))
+                return redirect(url_for('user_info'))  
         else:
-            # error splash screen 
+            # Error flash message
             flash("Wrong username/password. Please try again.")
             return redirect(url_for('Login'))
 
@@ -238,28 +245,7 @@ def delete_user(user_id):
     return redirect(url_for('admin'))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# admin route
 @app.route('/admin', methods=['GET'])
 def admin():
     if 'user_id' not in session or not session.get('is_admin'):

@@ -28,13 +28,6 @@ cur.execute('''
         p_stroke BOOLEAN NOT NULL    
     )
 ''')
-
-# String to integer / yes and no (may not use)
-def yes_to_one(yesno):
-    if yesno.lower() == 'yes':
-        return True
-    else:
-        return False
     
 # cleaning bmi data 
 def bmi_cleaning(value):
