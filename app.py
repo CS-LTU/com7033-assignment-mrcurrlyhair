@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify, render_template, session, redirect, u
 import pymongo
 import sqlite3
 import hashlib
+import re 
 
 # need to add comment
 app = Flask(__name__, static_folder='static')
-app.secret_key = 'assignmentdatabase'
+app.secret_key = 'assignment database'
 
 # mongo connection
 mdb_path = "mongodb://localhost:27017/"
@@ -125,10 +126,17 @@ def Signup():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         hashed_password = hashing_pass(password)
+        password_requirements = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+    
 
         # does both passwords match 
         if password != confirm_password:
             flash("Passwords do not match. Please try again.")
+            return redirect(url_for('Signup'))
+        
+        # check password requirements
+        if not re.match(password_requirements, password):
+            flash("Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character.")
             return redirect(url_for('Signup'))
 
         # maximum +1 in sql p_id
@@ -145,7 +153,11 @@ def Signup():
             return redirect(url_for('Signup'))
 
         # insert user mongo
-        user_collection.insert_one({"u_id": new_p_id, "u_username": username, "u_password": hashed_password})
+        user_collection.insert_one({
+            "u_id": new_p_id, 
+            "u_username": username, 
+            "u_password": hashed_password,
+            "is_admin": False })
         
         #create user sql
         con = get_sqlite_connection()
@@ -171,10 +183,10 @@ def Login():
         # find patient in mongo 
         user = user_collection.find_one({"u_username": username})
 
-        # hashing pass
+        # hashing password
         hashed_input_password = hashing_pass(password)
 
-        # does user exist and has a matching pass
+        # does user exist and has a matching password
         if user and user['u_password'] == hashed_input_password:
             session['user_id'] = user['u_id']
             session['is_admin'] = user.get('is_admin', False)  
