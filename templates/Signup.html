@@ -16,7 +16,11 @@
                 <li><a href="{{ url_for('landing') }}">Home</a></li>
                 <li><a href="{{ url_for('information') }}">Information</a></li>
                 {% if 'user_id' in session %}
-                    <li><a href="{{ url_for('update_info') }}">Update Infomation</a></li>
+                    {% if session['is_admin'] %}
+                        <li><a href="{{ url_for('admin') }}">Admin</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('update_info') }}">Update Information</a></li>
+                    {% endif %}
                     <li><a href="{{ url_for('user_info') }}">Account</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
@@ -25,6 +29,7 @@
                 {% endif %}
             </ul>
         </div>
+        
         <!-- error splash screen -->
         {% with messages = get_flashed_messages() %}
         {% if messages %}
