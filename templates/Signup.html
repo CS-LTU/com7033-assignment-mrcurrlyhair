@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Signup</title>
+        <img src="{{ url_for('static', filename='LTU logo.png') }}" alt="LTU Logo" class="logo">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     
@@ -29,7 +30,7 @@
                 {% endif %}
             </ul>
         </div>
-        
+
         <!-- error splash screen -->
         {% with messages = get_flashed_messages() %}
         {% if messages %}

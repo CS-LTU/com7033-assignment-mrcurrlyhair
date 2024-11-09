@@ -7,6 +7,17 @@ body, html {
     margin: 0;
 }
 
+/* Logo */
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 400px;
+    height: auto;
+}
+
+
+
 /* Navbar Styling */
 .navbar {
     background-color: #800020; 
