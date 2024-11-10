@@ -181,13 +181,13 @@ def Login():
         username = request.form['username']
         password = request.form['password']
 
-        # find patient in mongo 
+        # Find patient in mongo 
         user = user_collection.find_one({"u_username": username})
 
-        # hashing password
+        # Hashing password
         hashed_input_password = hashing_pass(password)
 
-        # does user exist and has a matching password
+        # Does user exist and has a matching password
         if user and user['u_password'] == hashed_input_password:
             session['user_id'] = user['u_id']
             session['is_admin'] = user.get('is_admin', False)  
@@ -197,7 +197,7 @@ def Login():
             else:
                 return redirect(url_for('user_info'))  
         else:
-            # error splash screen 
+            # Error splash screen 
             flash("Wrong username/password. Please try again.")
             return redirect(url_for('Login'))
 
@@ -207,9 +207,9 @@ def Login():
 # Logout page
 @app.route('/logout')
 def logout():
-    session.clear()  # clear all session data
+    session.clear()  # Clear all session data
     flash("Successfully logged out ")
-    return redirect(url_for('Login'))  # redirect to home page
+    return redirect(url_for('Login'))
 
 # Admin route
 @app.route('/admin', methods=['GET'])

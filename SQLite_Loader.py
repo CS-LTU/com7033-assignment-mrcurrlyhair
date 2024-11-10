@@ -4,11 +4,11 @@ import random
 import string 
 
 # File paths 
-db_path = 'Database.db'
+sqlite_db_path = 'Database.db'
 csv_path = 'healthcare-dataset-stroke-data.csv'
 
 
-con = sqlite3.connect(db_path)
+con = sqlite3.connect(sqlite_db_path)
 cur = con.cursor()
 
 # Creating the table for patient infoimation 
