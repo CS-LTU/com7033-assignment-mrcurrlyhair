@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, session, redirect, url_for, abort, request, flash, get_flashed_messages  
+from flask import Flask, request, jsonify, render_template, session, redirect, url_for, abort, request, flash, get_flashed_messages, abort  
 import pymongo
 import sqlite3
 import hashlib
@@ -76,6 +76,7 @@ def update_info():
         return redirect(url_for('Login'))
 
     user_id = session['user_id']
+    password_requirements = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
 
     if request.method == 'POST':
         # Get updated information from form
@@ -94,12 +95,18 @@ def update_info():
         confirm_password = request.form.get('confirm_password')
 
         if new_password:
+            # Check if passwords match
             if new_password != confirm_password:
                 flash("Passwords do not match. Please try again.")
                 return redirect(url_for('update_info'))
-            hashed_password = hashing_pass(new_password)
 
-            # Update password in Mongo
+            # Password requirements
+            if not re.match(password_requirements, new_password):
+                flash("Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character.")
+                return redirect(url_for('update_info'))
+            
+            # Hashing password
+            hashed_password = hashing_pass(new_password)  
             user_collection.update_one({"u_id": user_id}, {"$set": {"u_password": hashed_password}})
 
         # Update the patient record in SQLite

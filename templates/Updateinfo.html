@@ -10,7 +10,7 @@
         <header>
             <h1>LTU Hospital</h1>
         </header>
-        
+
         <!-- nav bar -->
         <div class="navbar">
             <ul>
@@ -30,6 +30,16 @@
                 {% endif %}
             </ul>
         </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
 
         <!-- Show current user data and allows the user to edit incorrect/update infomation-->   
         <div class="form-container">
@@ -103,12 +113,15 @@
                     <option value="1" {% if patient[11] == 1 %}selected{% endif %}>Yes</option>
                 </select>
 
+                
                 <div class="sub-title"><h2>Update Password</h2></div>
                 <label for="new_password">New Password:</label>
                 <input type="password" id="new_password" name="new_password">
                 <label for="confirm_password">Confirm New Password:</label>
                 <input type="password" id="confirm_password" name="confirm_password">
-    
+
+
+
                 <button type="submit">Update Information</button>
             </form>
         </div>
