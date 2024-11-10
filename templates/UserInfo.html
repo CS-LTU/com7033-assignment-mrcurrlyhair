@@ -31,7 +31,7 @@
             </ul>
         </div>
         
-
+        <!-- Showing user data from SQLite -->
         <h2>Account Information</h2>
         <div class="account-info">
             <p><strong>User ID:</strong> {{ user['u_id'] }}</p>
@@ -58,7 +58,8 @@
                     No
                 {% endif %}
             </p>
-        
+
+        <!-- Delete Button -->
         </div>
         <div class="delete-button-container">
             <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
@@ -66,7 +67,7 @@
              </form>
         </div>
     
-
+        <!-- Footer -->
         <footer>
         <p>2024 Database Website | All rights reserved</p>
         </footer>

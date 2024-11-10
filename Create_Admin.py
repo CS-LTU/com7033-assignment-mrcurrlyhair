@@ -1,6 +1,7 @@
 import pymongo
 import hashlib
-from app import hashing_pass
+from app import app, hashing_pass, get_sqlite_connection, hashing_pass
+
 
 # MongoDB connection
 mdb_path = "mongodb://localhost:27017/"

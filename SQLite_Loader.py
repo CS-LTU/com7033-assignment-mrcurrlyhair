@@ -11,7 +11,7 @@ csv_path = 'healthcare-dataset-stroke-data.csv'
 con = sqlite3.connect(db_path)
 cur = con.cursor()
 
-#Creating the table for patient infoimation 
+# Creating the table for patient infoimation 
 cur.execute('''
     CREATE TABLE IF NOT EXISTS patient(
         p_id INTEGER PRIMARY KEY, 
@@ -29,18 +29,18 @@ cur.execute('''
     )
 ''')
     
-# cleaning bmi data 
+# Cleaning bmi data 
 def bmi_cleaning(value):
     if value.strip() == '' or value.lower == 'n/a':
         return None
     
-# testing opening csv 
+# Testing opening csv 
 with open(csv_path) as csv_file:
     table = csv.reader(csv_file)
     next(table)
 
  
-# inserting data test 
+# Inserting data test 
     for row in table:
         cur.execute('''
             SELECT COUNT(*) FROM patient WHERE p_id = ?
@@ -69,12 +69,12 @@ with open(csv_path) as csv_file:
                 bool(int(row[11])),     # stroke
             ))
 
-#close the file 
+# Close the file 
 csv_file.close()
 
-# upload changes
+# Upload changes
 con.commit()
 
-# close connection 
+# Close connection 
 con.close()
   

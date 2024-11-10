@@ -5,21 +5,21 @@ import random
 import string
 import hashlib
 
-# file paths 
+# File paths 
 mdb_path = "mongodb://localhost:27017/"
 sqlite_db_path = "Database.db"
 csv_path = "healthcare-dataset-stroke-data.csv"
 
-# connect to MongoDB
+# Connect to MongoDB
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
 user_collection = db["user"]
 
-# connect to SQLite
+# Connect to SQLite
 sqlite_con = sqlite3.connect(sqlite_db_path)
 sqlite_cur = sqlite_con.cursor()
 
-# for username
+# For username
 word_list = [
     "apple", "banana", "cherry", "dragon", "eagle", "falcon", "grape", "honey", "island", "jungle",
     "kiwi", "lemon", "mango", "night", "orange", "peach", "queen", "river", "stone", "tiger",
@@ -36,13 +36,13 @@ word_list = [
     "wander", "xenon", "yule"
 ]
 
-# generating random username for existing users 
+# Generating random username for existing users 
 def gen_username(lenght=18):
     word1 = random.choice(word_list)
     word2 = random.choice(word_list)
     return word1.capitalize() + word2.capitalize()
 
-# hashing variable 
+# Hashing variable 
 def hashing_pass(text):
     text = text.encode('utf-8')
     hash = hashlib.sha256()
@@ -50,20 +50,20 @@ def hashing_pass(text):
     return hash.hexdigest()
 
 
-# generating random password for existing users 
+# Generating random password for existing users 
 def gen_password(length=8):
     password = "".join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=length))
     return hashing_pass(password)
     
 
-# get p_id from sql_db
+# Get p_id from sql_db
 def get_patient_ids():
     sqlite_cur.execute("SELECT p_id FROM patient")
     return [row[0] for row in sqlite_cur.fetchall()]
 
 patient_ids = get_patient_ids()
 
-# generate and insert user/pass 
+# Generate and insert user/pass 
 user_records = []
 for p_id in patient_ids:
     if not user_collection.find_one({"u_id": p_id}):
@@ -71,13 +71,13 @@ for p_id in patient_ids:
         password = gen_password()
         user_records.append({"u_id": p_id, "u_username": username, "u_password": password})
 
-# insert generated user/pass
+# Insert generated user/pass
 if user_records:
     user_collection.insert_many(user_records)
 else:
     print("Already requested")
 
 
-# close connections
+# Close connections
 sqlite_con.close()
 client.close()

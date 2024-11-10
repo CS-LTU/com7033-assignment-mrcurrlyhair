@@ -30,7 +30,8 @@
                 {% endif %}
             </ul>
         </div>
- 
+
+        <!-- Show current user data and allows the user to edit incorrect/update infomation-->   
         <div class="form-container">
             <h1>Update Information</h1>
             <form action="{{ url_for('update_info') }}" method="POST">
@@ -106,6 +107,7 @@
             </form>
         </div>
 
+        <!-- Footer -->
         <footer>
             <p>2024 Database Website | All rights reserved</p>
         </footer>
