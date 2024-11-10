@@ -90,9 +90,19 @@ def update_info():
         p_bmi = request.form['p_bmi']
         p_smoking_status = request.form['p_smoking_status']
         p_stroke = request.form['p_stroke']
-        
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
 
-        # Update the patient record 
+        if new_password:
+            if new_password != confirm_password:
+                flash("Passwords do not match. Please try again.")
+                return redirect(url_for('update_info'))
+            hashed_password = hashing_pass(new_password)
+
+            # Update password in Mongo
+            user_collection.update_one({"u_id": user_id}, {"$set": {"u_password": hashed_password}})
+
+        # Update the patient record in SQLite
         con = get_sqlite_connection()
         cur = con.cursor()
         cur.execute("""
@@ -106,6 +116,7 @@ def update_info():
         con.commit()
         con.close()
 
+        flash("Information updated.")
         return redirect(url_for('user_info'))
 
     # Get current patient info

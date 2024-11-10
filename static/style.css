@@ -147,8 +147,8 @@ button:hover {
     background-color: #a0002e;
 }
 
-/* Section Title within Forms */
-.form-container .section-title {
+/* Sub title within Forms */
+.form-container .sub-title {
     margin-top: 20px;
     font-size: 17.5px;
     color: #800020;

@@ -35,7 +35,7 @@
         <div class="form-container">
             <h1>Update Information</h1>
             <form action="{{ url_for('update_info') }}" method="POST">
-                <div class="section-title"><h2><strong>Basic Information</strong></h2></div>
+                <div class="sub-title"><h2><strong>Basic Information</strong></h2></div>
                 
                 <label for="p_gender">Gender:</label>
                 <select id="p_gender" name="p_gender" required>
@@ -53,7 +53,7 @@
                     <option value="No" {% if patient[5] == 'No' %}selected{% endif %}>No</option>
                 </select>
     
-                <div class="section-title"><h2>Health Details</h2></div>
+                <div class="sub-title"><h2>Health Details</h2></div>
                 <label for="p_hypertension">Hypertension:</label>
                 <select id="p_hypertension" name="p_hypertension" required>
                     <option value="0" {% if patient[3] == 0 %}selected{% endif %}>No</option>
@@ -72,7 +72,7 @@
                 <label for="p_bmi">BMI:</label>
                 <input type="number" step="0.1" id="p_bmi" name="p_bmi" value="{{ patient[9] }}" required>
     
-                <div class="section-title">Lifestyle</div>
+                <div class="sub-title">Lifestyle</div>
                 <label for="p_work_type">Work Type:</label>
                 <select id="p_work_type" name="p_work_type" required>
                     <option value="Private" {% if patient[6] == 'Private' %}selected{% endif %}>Private</option>
@@ -102,6 +102,12 @@
                     <option value="0" {% if patient[11] == 0 %}selected{% endif %}>No</option>
                     <option value="1" {% if patient[11] == 1 %}selected{% endif %}>Yes</option>
                 </select>
+
+                <div class="sub-title"><h2>Update Password</h2></div>
+                <label for="new_password">New Password:</label>
+                <input type="password" id="new_password" name="new_password">
+                <label for="confirm_password">Confirm New Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password">
     
                 <button type="submit">Update Information</button>
             </form>
