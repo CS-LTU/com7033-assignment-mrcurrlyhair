@@ -37,7 +37,13 @@
             <p><strong>User ID:</strong> {{ user['u_id'] }}</p>
             <p><strong>Gender:</strong> {{ patient[1] }}</p>
             <p><strong>Age:</strong> {{ patient[2] }}</p>
-            <p><strong>Hypertension:</strong> {{ "Yes" if patient[3] == 1 else "No" }}</p>
+            <p><strong>Hypertension:</strong> 
+                {% if patient[3] == 1 %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </p>
             <p><strong>Heart Disease:</strong> {{ "Yes" if patient[4] == 1 else "No" }}</p>
             <p><strong>Ever Married:</strong> {{ patient[5] }}</p>
             <p><strong>Work Type:</strong> {{ patient[6] }}</p>
@@ -45,6 +51,14 @@
             <p><strong>Average Glucose Level:</strong> {{ patient[8] }}</p>
             <p><strong>BMI:</strong> {{ patient[9] }}</p>
             <p><strong>Smoking Status:</strong> {{ patient[10] }}</p>
+            <p><strong>History of Stroke:</strong> 
+                {% if patient[11] == 1 %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </p>
+        
         </div>
         <div class="delete-button-container">
             <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">

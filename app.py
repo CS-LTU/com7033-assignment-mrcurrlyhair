@@ -90,18 +90,20 @@ def update_info():
         p_avg_glucose_level = request.form['p_avg_glucose_level']
         p_bmi = request.form['p_bmi']
         p_smoking_status = request.form['p_smoking_status']
+        p_stroke = request.form['p_stroke']
+        
 
         # update the patient record 
         con = get_sqlite_connection()
         cur = con.cursor()
         cur.execute("""
             UPDATE patient
-            SET p_gender = ?, p_age = ?, p_hypertension = ?, p_heart_disease = ?, p_ever_married = ?, 
-                p_work_type = ?, p_residence_type = ?, p_avg_glucose_level = ?, 
-                p_bmi = ?, p_smoking_status = ?
+            SET p_gender = ?, p_age = ?, p_hypertension = ?, p_heart_disease = ?, 
+                p_ever_married = ?, p_work_type = ?, p_residence_type = ?, 
+                p_avg_glucose_level = ?, p_bmi = ?, p_smoking_status = ?, p_stroke = ?
             WHERE p_id = ?
         """, (p_gender, p_age, p_hypertension, p_heart_disease, p_ever_married, p_work_type, 
-              p_residence_type, p_avg_glucose_level, p_bmi, p_smoking_status, user_id))
+              p_residence_type, p_avg_glucose_level, p_bmi, p_smoking_status, p_stroke, user_id))
         con.commit()
         con.close()
 

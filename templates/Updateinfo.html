@@ -82,7 +82,11 @@
                 </select>
     
                 <label for="p_residence_type">Residence Type:</label>
-                <input type="text" id="p_residence_type" name="p_residence_type" value="{{ patient[7] }}" required>
+                <select id="p_residence_type" name="p_residence_type" required>
+                    <option value="Unknown" {% if patient[7] == 'Unknown' %}selected{% endif %}>Unknown</option>
+                    <option value="Urban" {% if patient[7] == 'Urban' %}selected{% endif %}>Urban</option>
+                    <option value="Rural" {% if patient[7] == 'Rural' %}selected{% endif %}>Rural</option>
+                </select>
     
                 <label for="p_smoking_status">Smoking Status:</label>
                 <select id="p_smoking_status" name="p_smoking_status" required>
@@ -90,6 +94,12 @@
                     <option value="Never Smoked" {% if patient[10] == 'Never Smoked' %}selected{% endif %}>Never Smoked</option>
                     <option value="Smokes" {% if patient[10] == 'Smokes' %}selected{% endif %}>Smokes</option>
                     <option value="Unknown" {% if patient[10] == 'Unknown' %}selected{% endif %}>Unknown</option>
+                </select>
+
+                <label for="p_stroke">History of Stroke:</label>
+                <select name="p_stroke" id="p_stroke">
+                    <option value="0" {% if patient[11] == 0 %}selected{% endif %}>No</option>
+                    <option value="1" {% if patient[11] == 1 %}selected{% endif %}>Yes</option>
                 </select>
     
                 <button type="submit">Update Information</button>
