@@ -1,19 +1,12 @@
 import pymongo
 import hashlib
+from app import hashing_pass
 
 # MongoDB connection
 mdb_path = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
 user_collection = db["user"]
-
-# hashing password
-def hashing_pass(text):
-    text = text.encode('utf-8')
-    hash = hashlib.sha256()
-    hash.update(text)
-    return hash.hexdigest()
-
 
 # admin details
 admin_username = "admin"

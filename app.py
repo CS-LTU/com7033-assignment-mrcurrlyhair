@@ -26,6 +26,19 @@ def hashing_pass(text):
     hash.update(text)
     return hash.hexdigest()
 
+
+# home page
+@app.route('/')
+def landing():
+    print('test landing page')
+    return render_template('Home.html')
+
+# info page
+@app.route('/Information')
+def information():
+    print('test information')
+    return render_template("Information.html")
+
 # get user info page
 @app.route('/user_info')
 def user_info():
@@ -56,19 +69,6 @@ def user_info():
         )
 
         return render_template("UserInfo.html", user=default_user, patient=default_patient)
-
-
-# home page
-@app.route('/')
-def landing():
-    print('test landing page')
-    return render_template('Home.html')
-
-# info page
-@app.route('/Information')
-def information():
-    print('test information')
-    return render_template("Information.html")
 
 #update health info
 @app.route('/update_info', methods=['GET', 'POST'])
@@ -212,6 +212,23 @@ def logout():
     flash("Successfully logged out ")
     return redirect(url_for('Login'))  # redirect to home page
 
+# admin route
+@app.route('/admin', methods=['GET'])
+def admin():
+    if 'user_id' not in session or not session.get('is_admin'):
+        return redirect(url_for('Login'))
+    
+    # Fetch users from MongoDB
+    users = list(user_collection.find({}, {"_id": 0, "u_id": 1, "u_username": 1}))
+    
+    # Fetch patients from SQLite
+    con = get_sqlite_connection()
+    cur = con.cursor()
+    cur.execute("SELECT p_id, p_gender, p_age FROM patient")
+    patients = cur.fetchall()
+    con.close()
+    
+    return render_template('Admin.html', users=users, patients=patients)
 
 # delete account route for patient 
 @app.route('/delete_account', methods=['POST'])
@@ -258,25 +275,6 @@ def delete_user(user_id):
 
     flash("User deleted successfully.")
     return redirect(url_for('admin'))
-
-
-# admin route
-@app.route('/admin', methods=['GET'])
-def admin():
-    if 'user_id' not in session or not session.get('is_admin'):
-        return redirect(url_for('Login'))
-    
-    # Fetch users from MongoDB
-    users = list(user_collection.find({}, {"_id": 0, "u_id": 1, "u_username": 1}))
-    
-    # Fetch patients from SQLite
-    con = get_sqlite_connection()
-    cur = con.cursor()
-    cur.execute("SELECT p_id, p_gender, p_age FROM patient")
-    patients = cur.fetchall()
-    con.close()
-    
-    return render_template('Admin.html', users=users, patients=patients)
 
 
 
