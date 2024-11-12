@@ -157,7 +157,7 @@ def Signup():
         cur = con.cursor()
         cur.execute("SELECT MAX(p_id) FROM patient")
         max_p_id = cur.fetchone()[0]
-        new_p_id = max_p_id + 1 if max_p_id is not None else 1
+        new_p_id = max_p_id + 1 if max_p_id is not None else 2
         con.close()
 
         # Does user already exist?
