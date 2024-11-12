@@ -1,9 +1,10 @@
 import pymongo
 import hashlib
-from app import app, hashing_pass, get_sqlite_connection, hashing_pass
+from app import app, get_sqlite_connection
+from Mongo_Loader import hashing_pass
 
 
-# MongoDB connection
+# Mongo connection
 mdb_path = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
@@ -11,7 +12,7 @@ user_collection = db["user"]
 
 # Admin details
 admin_username = "admin"
-admin_password = "12345678" #hashing admin password, more important than user passwords
+admin_password = "Admin!1234" # Hashing admin password, more important than user passwords
 hashed_password = hashing_pass(admin_password)
 
 # Creating admin 

@@ -4,34 +4,6 @@ from app import app, user_collection, client, db, hashing_pass
 from pymongo import MongoClient
 import sqlite3
 
-
-
-class TestHashingPass(unittest.TestCase):
-
-# Testing if the same password hashed is equal to one another  
-    def test_hashing_pass_consistency(self):
-        input_text = "Test_password"
-        hash1 = hashing_pass(input_text)
-        hash2 = hashing_pass(input_text)
-        self.assertEqual(hash1, hash2, "Hash does not match.")
-
-
-# Testing if different passwords have different hashes
-    def test_hashing_pass_diff_input(self):
-        input_text1 = "test_password"
-        input_text2 = "password_test"
-        hash1 = hashing_pass(input_text1)
-        hash2 = hashing_pass(input_text2)
-        self.assertNotEqual(hash1, hash2, "Different inputs , should be different hashes")
-
-
-# Testing length of the hash, SHA256 should equal 64 characters
-    def test_hashing_pass_length(self):
-        input_text = "test_password"
-        hashed_output = hashing_pass(input_text)
-        self.assertEqual(len(hashed_output), 64, "Hash length is incorrect.")
-
-
 # Connect to Mongo
 client = MongoClient("mongodb://localhost:27017/")
 db = client["medicalDB"]
@@ -70,7 +42,7 @@ class TestFlaskRoutes(unittest.TestCase):
     def test_signup(self):
         response = self.client.post('/Signup', data={
             'username': 'testuser',
-            'password': 'Testpass!123',
+            'password': 'Testpass!123', # Has to meet password requirements 
             'confirm_password': 'Testpass!123'
         }, follow_redirects=True)
         
@@ -158,6 +130,24 @@ class TestFlaskRoutes(unittest.TestCase):
         response = self.client.post('/delete_account')
         self.assertEqual(response.status_code, 302)  # Should redirect after account deletion
         self.assertNotIn(b'testuser', user_collection.find({}).distinct("u_username"))
+
+
+class TestHashingPass(unittest.TestCase):
+
+# Testing if different passwords have different hashes
+    def test_hashing_pass_diff_input(self):
+        input_text1 = "Test_password"
+        input_text2 = "Password_test"
+        hash1 = hashing_pass(input_text1)
+        hash2 = hashing_pass(input_text2)
+        self.assertNotEqual(hash1, hash2, "Different inputs , should be different hashes")
+
+
+# Testing length of the hash, SHA256 should equal 64 characters
+    def test_hashing_pass_length(self):
+        input_text = "Test_password"
+        hashed_output = hashing_pass(input_text)
+        self.assertEqual(len(hashed_output), 64, "Hash length is incorrect.")
 
 if __name__ == '__main__':
     unittest.main()

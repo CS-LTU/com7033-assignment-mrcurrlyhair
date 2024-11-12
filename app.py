@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, render_template, session, redirect, url_for, abort, request, flash, get_flashed_messages, abort  
+from flask import Flask, request, render_template, session, redirect, url_for, abort, request, flash, get_flashed_messages, abort
+from Mongo_Loader import hashing_pass
 import pymongo
 import sqlite3
 import hashlib
@@ -17,13 +18,6 @@ user_collection = db["user"]
 sqlite_db_path = "Database.db"
 def get_sqlite_connection():
     return sqlite3.connect(sqlite_db_path)
-
-# Hashing password
-def hashing_pass(text):
-    text = text.encode('utf-8')
-    hash = hashlib.sha256()
-    hash.update(text)
-    return hash.hexdigest()
 
 
 # Home page
@@ -80,19 +74,19 @@ def update_info():
 
     if request.method == 'POST':
         # Get updated information from form
-        p_gender = request.form['p_gender']
-        p_age = request.form['p_age']
-        p_hypertension = request.form['p_hypertension']
-        p_heart_disease = request.form['p_heart_disease']
-        p_ever_married = request.form['p_ever_married']
-        p_work_type = request.form['p_work_type']
-        p_residence_type = request.form['p_residence_type']
-        p_avg_glucose_level = request.form['p_avg_glucose_level']
-        p_bmi = request.form['p_bmi']
-        p_smoking_status = request.form['p_smoking_status']
-        p_stroke = request.form['p_stroke']
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
+        p_gender = request.form['p_gender'][:6]
+        p_age = request.form['p_age'][:3]
+        p_hypertension = request.form['p_hypertension'][:1]
+        p_heart_disease = request.form['p_heart_disease'][:1]
+        p_ever_married = request.form['p_ever_married'][:3]
+        p_work_type = request.form['p_work_type'][:15]
+        p_residence_type = request.form['p_residence_type'][:7]
+        p_avg_glucose_level = request.form['p_avg_glucose_level'][:6]
+        p_bmi = request.form['p_bmi'][:8]
+        p_smoking_status = request.form['p_smoking_status'][:15]
+        p_stroke = request.form['p_stroke'][:1]
+        new_password = request.form.get('new_password')[:32]
+        confirm_password = request.form.get('confirm_password')[:32]
 
         if new_password:
             # Check if passwords match
@@ -141,9 +135,9 @@ def update_info():
 @app.route('/Signup', methods=['GET', 'POST'])
 def Signup():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        username = request.form['username'][:32]
+        password = request.form['password'][:32]
+        confirm_password = request.form['confirm_password'][:32]
         hashed_password = hashing_pass(password)
         password_requirements = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
     
@@ -168,7 +162,7 @@ def Signup():
 
         # Does user already exist?
         if user_collection.find_one({"u_username": username}):
-            flash("Username already exists. Please choose a different one.")
+            flash("Username already exists. Please try again.")
             return redirect(url_for('Signup'))
 
         # Insert user Mongo
@@ -196,8 +190,8 @@ def Signup():
 @app.route('/Login', methods=['GET', 'POST'])
 def Login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form['username'][:32]
+        password = request.form['password'][:32]
 
         # Find patient in mongo 
         user = user_collection.find_one({"u_username": username})

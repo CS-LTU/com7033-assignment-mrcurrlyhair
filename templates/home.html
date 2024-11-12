@@ -2,16 +2,18 @@
 <html>
     <head>
         <title>Home</title>
+        <!-- CSS -->
         <img src="{{ url_for('static', filename='LTU logo.png') }}" alt="LTU Logo" class="logo">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
 
     <body>
+        <!-- Header -->
         <header>
             <h1> LTU Hospital</h1>
         </header>
         
-        <!-- nav bar -->
+        <!-- Nav bar -->
         <div class="navbar">
             <ul>
                 <li><a href="{{ url_for('landing') }}">Home</a></li>
