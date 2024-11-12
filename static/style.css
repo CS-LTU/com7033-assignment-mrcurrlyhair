@@ -93,7 +93,9 @@ button:hover {
 }
 
 /* Centered Form Containers */
-.form-container, .login-form, .signup-form {
+.form-container,
+.login-form,
+.signup-form {
     background-color: #ffffff;
     padding: 30px 40px;
     border-radius: 8px;

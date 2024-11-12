@@ -12,7 +12,7 @@ app.secret_key = 'assignment database'
 mdb_path = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
-user_collection = db["user"]
+user_collection = db["user"]  # used for for anything changing in the mongo database
 
 # SQLite connection
 sqlite_db_path = "Database.db"
@@ -32,7 +32,7 @@ def information():
     print('test information')
     return render_template("Information.html")
 
-# Get user info page
+# Get user info page , this gets the users saved infomation, shown through html code 
 @app.route('/user_info')
 def user_info():
     if 'user_id' not in session:
@@ -72,8 +72,8 @@ def update_info():
     user_id = session['user_id']
     password_requirements = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
 
+    # Get updated information from form
     if request.method == 'POST':
-        # Get updated information from form
         p_gender = request.form['p_gender'][:6]
         p_age = request.form['p_age'][:3]
         p_hypertension = request.form['p_hypertension'][:1]
@@ -94,19 +94,19 @@ def update_info():
                 flash("Passwords do not match. Please try again.")
                 return redirect(url_for('update_info'))
 
-            # Password requirements
+            # Password requirements check
             if not re.match(password_requirements, new_password):
                 flash("Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character.")
                 return redirect(url_for('update_info'))
             
-            # Hashing password
+            # Hashing password if passes last if statments 
             hashed_password = hashing_pass(new_password)  
             user_collection.update_one({"u_id": user_id}, {"$set": {"u_password": hashed_password}})
 
         # Update the patient record in SQLite
         con = get_sqlite_connection()
         cur = con.cursor()
-        cur.execute("""
+        cur.execute(""" 
             UPDATE patient
             SET p_gender = ?, p_age = ?, p_hypertension = ?, p_heart_disease = ?, 
                 p_ever_married = ?, p_work_type = ?, p_residence_type = ?, 
@@ -135,11 +135,11 @@ def update_info():
 @app.route('/Signup', methods=['GET', 'POST'])
 def Signup():
     if request.method == 'POST':
-        username = request.form['username'][:32]
-        password = request.form['password'][:32]
+        username = request.form['username'][:32] # limit on username (sql protection )
+        password = request.form['password'][:32]# limit on password (sql protection )
         confirm_password = request.form['confirm_password'][:32]
         hashed_password = hashing_pass(password)
-        password_requirements = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+        password_requirements = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' # password requirements 
     
 
         # Does both passwords match 
@@ -149,7 +149,8 @@ def Signup():
         
         # Check password requirements
         if not re.match(password_requirements, password):
-            flash("Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character.")
+            flash('''Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, 
+                  and a special character''')
             return redirect(url_for('Signup'))
 
         # Highest p_id +1 in sql p_id
@@ -157,7 +158,7 @@ def Signup():
         cur = con.cursor()
         cur.execute("SELECT MAX(p_id) FROM patient")
         max_p_id = cur.fetchone()[0]
-        new_p_id = max_p_id + 1 if max_p_id is not None else 2
+        new_p_id = max_p_id + 1 if max_p_id is not None else 3 #1 is saved for admin use, while 2 is used for testing 
         con.close()
 
         # Does user already exist?
@@ -196,7 +197,7 @@ def Login():
         # Find patient in mongo 
         user = user_collection.find_one({"u_username": username})
 
-        # Hashing password
+        # Hashing password for check varaible 
         hashed_input_password = hashing_pass(password)
 
         # Does user exist and has a matching password
@@ -204,6 +205,7 @@ def Login():
             session['user_id'] = user['u_id']
             session['is_admin'] = user.get('is_admin', False)  
 
+            # Changes the landing page after signin depending on the privledges of the user
             if session['is_admin']:
                 return redirect(url_for('admin'))  
             else:
@@ -226,11 +228,12 @@ def logout():
 # Admin route
 @app.route('/admin', methods=['GET'])
 def admin():
+    # Checks if user if logged and has admin privledges if not returns to login 
     if 'user_id' not in session or not session.get('is_admin'):
         return redirect(url_for('Login'))
     
-    # Fetch users from MongoDB
-    users = list(user_collection.find({}, {"_id": 0, "u_id": 1, "u_username": 1}))
+    # Fetch users from Mongo
+    users = list(user_collection.find({}, {"_id": 0, "u_id": 1, "u_username": 1})) #admin id is always 1
     
     # Fetch patients from SQLite
     con = get_sqlite_connection()
@@ -244,11 +247,11 @@ def admin():
 # Delete account route for patient 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
+    #Checks if user if logged if not returns to login 
     if 'user_id' not in session:
         return redirect(url_for('Login'))
 
     user_id = session['user_id']
-    is_admin = session.get('is_admin', False)
 
     # Delete from mongo
     user_collection.delete_one({"u_id": user_id})
@@ -263,14 +266,12 @@ def delete_account():
     # Clear session 
     session.clear()
     flash("Account deleted successfully.")
-    if is_admin:
-        return redirect(url_for('admin'))
-    else:
-        return redirect(url_for('Login'))
+    return redirect(url_for('Login'))
 
 # Delete account route for admin 
 @app.route('/delete_user/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
+    #Checks if user if logged and has admin privledges if not returns to login 
     if 'user_id' not in session or not session.get('is_admin'):
         return redirect(url_for('Login'))
 

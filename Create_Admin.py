@@ -12,7 +12,7 @@ user_collection = db["user"]
 
 # Admin details
 admin_username = "admin"
-admin_password = "Admin!1234" # Hashing admin password, more important than user passwords
+admin_password = "Churchill!1" # Hashing admin password, more important than user passwords
 hashed_password = hashing_pass(admin_password)
 
 # Creating admin 
@@ -23,9 +23,9 @@ admin_user = {
     "is_admin": True
 }
 
-# Adding admin to mongo 
+# Adding admin to mongo , if already exists prints admin is already created 
 try:
     user_collection.insert_one(admin_user)
     print("Admin created")
 except pymongo.errors.DuplicateKeyError:
-    print("Already requested")
+    print("Already created")
