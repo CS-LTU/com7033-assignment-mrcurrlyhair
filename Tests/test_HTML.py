@@ -3,7 +3,7 @@ import pymongo
 from app import app, user_collection
 from Mongo_Loader import hashing_pass
 
-# MongoDB setup to create a test user
+# Mongo setup to create a test user
 def create_testuser():
 
     # Testuser details
@@ -13,21 +13,35 @@ def create_testuser():
 
     # Creating Testuser
     test_user = {
-        "u_id": 2,  # Unique ID for test user
+        "u_id": 2,  # no user uses id of 1 , unique to testuser 
         "u_username": test_username,
         "u_password": hashed_password,
         "is_admin": False
     }
 
-    # Adding testuser to mogno
+    # Adding testuser to Mogno
     user_collection.insert_one(test_user)
-    print("Test user created")
+    print("Testuser created")
 
-create_testuser()
+def delete_testuser():
+    # Removes the test user with a specific u_id
+    user_collection.delete_one({"u_id": 2})
+    print("Testuser deleted")
 
-#allows client to be reused 
+# fixture that runs start_and_delete_Testuser once.
+@pytest.fixture(scope="session", autouse=True)
+# Function to create then delete testuser after tests 
+def start_and_delete_Testuser():
+    # Runs the function to create test user
+    create_testuser()
+    # allows tests to run while testuser is in mongo
+    yield  
+    # Runs the function to delete test user 
+    delete_testuser()
+
+# fixture to create the function of cleint reusable while testing
 @pytest.fixture
-#Creates test client ( for flask html )
+# Creates test client ( for flask html )
 def client():
     app.config['TESTING'] = True
     with app.test_client() as client:
