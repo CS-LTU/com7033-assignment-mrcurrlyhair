@@ -12,18 +12,18 @@ user_collection = db["user"]
 
 # Admin details
 admin_username = "admin"
-admin_password = "Churchill!1" # Hashing admin password, more important than user passwords
+admin_password = "Churchill!1" # Hashing admin password
 hashed_password = hashing_pass(admin_password)
 
 # Creating admin 
 admin_user = {
-    "u_id": 1, # Ensuring this u_id is unique as no one else occupies 1 
+    "u_id": 1, # no user uses id of 2 , unique to admin 
     "u_username": admin_username,
     "u_password": hashed_password,
     "is_admin": True
 }
 
-# Adding admin to mongo , if already exists prints admin is already created 
+# Adding admin to mongo , if already exists prints already created admin
 try:
     user_collection.insert_one(admin_user)
     print("Admin created")

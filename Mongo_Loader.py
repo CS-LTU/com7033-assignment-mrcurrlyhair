@@ -75,7 +75,7 @@ for p_id in patient_ids:
 if user_records:
     user_collection.insert_many(user_records)
 else:
-    print("Already requested")
+    print("Already requested mongo loader")
 
 
 # Close connections
