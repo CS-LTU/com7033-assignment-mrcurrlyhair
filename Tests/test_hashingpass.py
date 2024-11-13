@@ -1,5 +1,6 @@
 from Mongo_Loader import hashing_pass
 import hashlib
+import pytest
 
 def test_hashing_pass():
     password = "Churchill!1"

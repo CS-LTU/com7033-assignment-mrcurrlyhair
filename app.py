@@ -12,7 +12,7 @@ app.secret_key = 'assignment database'
 mdb_path = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
-user_collection = db["user"]  # used for for anything changing in the mongo database
+user_collection = db["user"]  # used for anything changing in the mongo database
 
 # SQLite connection
 sqlite_db_path = "Database.db"
@@ -60,9 +60,11 @@ def user_info():
         default_patient = (
             patient_info if patient_info else ("N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A")
         )
-
+        print('test landing page')
         return render_template("UserInfo.html", user=default_user, patient=default_patient)
+    
 
+    
 # Update health info
 @app.route('/update_info', methods=['GET', 'POST'])
 def update_info():
