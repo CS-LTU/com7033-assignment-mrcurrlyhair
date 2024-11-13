@@ -1,10 +1,38 @@
 import pytest
-from app import app 
+import pymongo 
+from app import app
+from Mongo_Loader import hashing_pass 
+
+
+# MongoDB setup to create a test user
+def create_testuser():
+    #Connect to Mongo
+    mdb_path = "mongodb://localhost:27017/"
+    client = pymongo.MongoClient(mdb_path)
+    db = client["medicalDB"]
+    user_collection = db["user"]
+
+    # Testuser details
+    test_username = "testuser"
+    test_password = "Churchill!2"
+    hashed_password = hashing_pass(test_password)
+
+    # Creating Testuser
+    test_user = {
+        "u_id": 2,  # Unique ID for test user
+        "u_username": test_username,
+        "u_password": hashed_password,
+        "is_admin": False
+    }
+
+    # Adding testuser to mogno
+    user_collection.insert_one(test_user)
+    print("Test user created")
+
 
 #allows client to be reused 
 @pytest.fixture
-
-#Creates test client (flask)
+#Creates test client ( for flask html )
 def client():
     app.config['TESTING'] = True
     with app.test_client() as client:
@@ -55,17 +83,20 @@ def test_user_info_sign(client):
         'username': 'testuser',
         'password': 'Churchill!2'
     }
+
     # Emulates login 
     response = client.post('/Login', data=login_data, follow_redirects=True)
 
     # Opens user_info page
     response = client.get('/user_info')
-    
+
     # Check if user info has loaded correclty
     assert response.status_code == 200
 
     # reads if user id is 2 from form
     assert b"<strong>User ID:</strong> 2" in response.data
+
+
 
     
 

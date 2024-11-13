@@ -17,7 +17,7 @@ hashed_password = hashing_pass(admin_password)
 
 # Creating admin 
 admin_user = {
-    "u_id": 1, # no user uses id of 2 , unique to admin 
+    "u_id": 1, # no user uses id of 1 , unique to admin 
     "u_username": admin_username,
     "u_password": hashed_password,
     "is_admin": True
