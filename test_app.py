@@ -1,8 +1,8 @@
-import unittest
-from flask import get_flashed_messages
-from app import app, user_collection, client, db, hashing_pass
-from pymongo import MongoClient
+import pytest
+import pymongo
 import sqlite3
+from Mongo_Loader import hashing_pass
+
 
 # Connect to Mongo
 client = MongoClient("mongodb://localhost:27017/")
