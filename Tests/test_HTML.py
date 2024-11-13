@@ -1,10 +1,11 @@
 import pytest
 import pymongo 
-from app import app, user_collection
+import sqlite3
+from app import app, user_collection, get_sqlite_connection
 from Mongo_Loader import hashing_pass
 
 # Mongo setup to create a test user
-def create_testuser():
+def create_testuser_mongo():
 
     # Testuser details
     test_username = "testuser"
@@ -23,23 +24,57 @@ def create_testuser():
     user_collection.insert_one(test_user)
     print("Testuser created")
 
-def delete_testuser():
+def delete_testuser_mongo():
     # Removes the test user with a specific u_id
     user_collection.delete_one({"u_id": 2})
     print("Testuser deleted")
 
+
+# SPACE FOR SQL 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # fixture that runs start_and_delete_Testuser once.
 @pytest.fixture(scope="session", autouse=True)
-# Function to create then delete testuser after tests 
-def start_and_delete_Testuser():
-    # Runs the function to create test user
-    create_testuser()
-    # allows tests to run while testuser is in mongo
-    yield  
-    # Runs the function to delete test user 
-    delete_testuser()
 
-# fixture to create the function of cleint reusable while testing
+# Function to create then delete testuser, in Mongo and SQL,fter tests 
+def start_and_delete_Testuser():
+    # Runs the function to create test user in Mogno
+    create_testuser_mongo()
+
+    # Runs the function to create testuser in SQL    
+
+    
+    # Allows tests to run while testuser is in Mongo and SQL
+    yield  
+
+    # Runs the function to delete testuser in Mongo 
+    delete_testuser_mongo()
+
+    # Runs the function to delete testuser in SQL
+
+# Fixture to create the function of cleint reusable while testing
 @pytest.fixture
 # Creates test client ( for flask html )
 def client():
@@ -47,21 +82,21 @@ def client():
     with app.test_client() as client:
         yield client
 
-# test home page 
+# Test home page 
 def test_landing(client):
-    # loads home html
+    # Loads home html
     response = client.get('/')
-    # check if theres a html error code, 200 is ok 
+    # Check if theres a html error code, 200 is ok 
     assert response.status_code == 200
 
-# test infomation page
+# Test infomation page
 def test_information(client):
-    # loads infomation html
+    # Loads infomation html
     response = client.get('/Information')
-    # check if theres a html error code, 200 is ok 
+    # Check if theres a html error code, 200 is ok 
     assert response.status_code == 200
 
-# test login page 
+# Test login page 
 def test_login(client):
     # Login for testuser to be sent in the login form
     login_data = {
@@ -77,15 +112,15 @@ def test_login(client):
     assert response.headers['Location'] == '/user_info'  
 
 
-# test user info without a signed in account 
+# Test user info without a signed in account 
 def test_user_info(client):
-    # loads user html
+    # Loads user html
     response= client.get('/user_info')
-    # html code 302 should appear as no account is signed in (redirect to login)
+    # HTML code 302 should appear as no account is signed in (redirect to login)
     assert response.status_code == 302
     assert response.headers['Location'] == '/Login' 
 
-# test user info while signed in 
+# Test user info while signed in 
 def test_user_info_sign(client):
     # Login for testuser to be sent in the login form
     login_data = {
@@ -102,7 +137,7 @@ def test_user_info_sign(client):
     # Check if user info has loaded correclty
     assert response.status_code == 200
 
-    # reads if user id is 2 from form
+    # Reads if user id is 2 from form
     assert b"<strong>User ID:</strong> 2" in response.data
 
 
