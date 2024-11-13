@@ -61,21 +61,24 @@ def get_patient_ids():
     sqlite_cur.execute("SELECT p_id FROM patient")
     return [row[0] for row in sqlite_cur.fetchall()]
 
-patient_ids = get_patient_ids()
+# 
+def insertmongo():
+    patient_ids = get_patient_ids()
+    user_records = []
+    for p_id in patient_ids:
+        if not user_collection.find_one({"u_id": p_id}):
+            username = gen_username()
+            password = gen_password()
+            user_records.append({"u_id": p_id, "u_username": username, "u_password": password})
 
-# Generate and insert user/pass 
-user_records = []
-for p_id in patient_ids:
-    if not user_collection.find_one({"u_id": p_id}):
-        username = gen_username()
-        password = gen_password()
-        user_records.append({"u_id": p_id, "u_username": username, "u_password": password})
+    if user_records:
+        user_collection.insert_many(user_records)
+    else:
+        print("Already requested mongo loader")
 
-# Insert generated user/pass
-if user_records:
-    user_collection.insert_many(user_records)
-else:
-    print("Already requested mongo loader")
+# only runs if the file is directly ran, 
+if __name__ == "__main__":
+    insertmongo()
 
 
 # Close connections

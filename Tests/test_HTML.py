@@ -1,16 +1,10 @@
 import pytest
 import pymongo 
-from app import app
-from Mongo_Loader import hashing_pass 
-
+from app import app, user_collection
+from Mongo_Loader import hashing_pass
 
 # MongoDB setup to create a test user
 def create_testuser():
-    #Connect to Mongo
-    mdb_path = "mongodb://localhost:27017/"
-    client = pymongo.MongoClient(mdb_path)
-    db = client["medicalDB"]
-    user_collection = db["user"]
 
     # Testuser details
     test_username = "testuser"
@@ -29,6 +23,7 @@ def create_testuser():
     user_collection.insert_one(test_user)
     print("Test user created")
 
+create_testuser()
 
 #allows client to be reused 
 @pytest.fixture
