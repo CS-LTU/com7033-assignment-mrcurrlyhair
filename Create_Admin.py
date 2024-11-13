@@ -28,4 +28,4 @@ try:
     user_collection.insert_one(admin_user)
     print("Admin created")
 except pymongo.errors.DuplicateKeyError:
-    print("Already created")
+    print("Already created admin")

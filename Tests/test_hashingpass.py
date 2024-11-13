@@ -1,5 +1,4 @@
 from Mongo_Loader import hashing_pass
-import hashlib
 import pytest
 
 def test_hashing_pass():
@@ -13,7 +12,3 @@ def test_hashing_pass():
     wrong_hashed = hashing_pass(wrong_pass)
 
     assert password != wrong_hashed
-
-
-
-
