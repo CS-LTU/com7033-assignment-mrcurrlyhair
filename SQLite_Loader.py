@@ -3,6 +3,7 @@ import csv
 import random
 import string 
 
+
 # File paths 
 sqlite_db_path = 'Database.db'
 csv_path = 'healthcare-dataset-stroke-data.csv'
