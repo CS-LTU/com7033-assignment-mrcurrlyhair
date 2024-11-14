@@ -12,9 +12,9 @@ def create_testuser_mongo():
     test_password = "Churchill!2"
     hashed_password = hashing_pass(test_password)
 
-    # Creating Testuser
+    # Creating Testuser dictionrary 
     test_user = {
-        "u_id": 2,  # no user uses id of 1 , unique to testuser 
+        "u_id": 2,  # no user uses u_id of 2 , unique to testuser 
         "u_username": test_username,
         "u_password": hashed_password,
         "is_admin": False
@@ -22,57 +22,60 @@ def create_testuser_mongo():
 
     # Adding testuser to Mogno
     user_collection.insert_one(test_user)
-    print("Testuser created")
+    print("Testuser created in Mongo")
 
 def delete_testuser_mongo():
-    # Removes the test user with a specific u_id
+    # Removes the testuser with a specific u_id in Mongo
     user_collection.delete_one({"u_id": 2})
-    print("Testuser deleted")
+    print("Testuser deleted in Mongo")
 
+# Connect to SQL
+sqlite_db_path = 'Database.db'
+con = sqlite3.connect(sqlite_db_path)
+cur = con.cursor()
 
-# SPACE FOR SQL 
+def create_testuser_sql(cur):
+    # Insert testuser into SQL with p_id of 2
+    cur.execute('''
+        INSERT INTO patient (
+            p_id, p_gender, p_age, p_hypertension, p_heart_disease, p_ever_married,
+            p_work_type, p_residence_type, p_avg_glucose_level, p_bmi,
+            p_smoking_status, p_stroke
+        ) 
+        VALUES (?, ?, 0, 0, 0, 'No', 'Unknown', 'Unknown', 0.0, 0.0, 'Unknown', 0) 
+    ''', (2, 'test'))
+    print("Test user created in SQL")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def delete_testuser_sql(cur):
+    # Removes the testuser with a specific p_id in SQL
+    cur.execute("DELETE FROM patient WHERE p_id = ?", (2,))
+    print("Testuser deleted in SQL")
 
 
 # fixture that runs start_and_delete_Testuser once.
 @pytest.fixture(scope="session", autouse=True)
 
-# Function to create then delete testuser, in Mongo and SQL,fter tests 
 def start_and_delete_Testuser():
-    # Runs the function to create test user in Mogno
-    create_testuser_mongo()
+    # Connect to SQL
+    con = get_sqlite_connection()
+    cur = con.cursor()
 
-    # Runs the function to create testuser in SQL    
+    try:
+        # Create test user in MongoDB and SQLite
+        create_testuser_mongo()
+        create_testuser_sql(cur)
+        con.commit()  # Commit changes in SQL
 
-    
-    # Allows tests to run while testuser is in Mongo and SQL
-    yield  
+        # Allows tests to run then after they have , returns here where it deletes the testuser account 
+        yield
 
-    # Runs the function to delete testuser in Mongo 
-    delete_testuser_mongo()
+    finally:
+        # Delete test user in Mongo and SQL
+        delete_testuser_mongo()
+        delete_testuser_sql(cur)
+        con.commit()  # Save deletions in SQ
+        con.close()   # Close SQL connection
 
-    # Runs the function to delete testuser in SQL
 
 # Fixture to create the function of cleint reusable while testing
 @pytest.fixture
@@ -137,9 +140,11 @@ def test_user_info_sign(client):
     # Check if user info has loaded correclty
     assert response.status_code == 200
 
-    # Reads if user id is 2 from form
+    # Reads if user id is 2 in the form (Mongo test)
     assert b"<strong>User ID:</strong> 2" in response.data
 
+    # Reads if gender is test in the form (SQL test)
+    assert b"<strong>Gender:</strong> test" in response.data
 
 
     
