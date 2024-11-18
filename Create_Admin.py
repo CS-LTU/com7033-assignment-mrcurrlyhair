@@ -21,19 +21,19 @@ admin_username = "admin"
 admin_password = "Churchill!1" # Hashing admin password
 hashed_password = hashing_pass(admin_password)
 
-# Creating admin in Mongo
-admin_mongo= {
-    "u_id": 1, # no user uses id of 1 , unique to admin 
-    "u_username": admin_username,
-    "u_password": hashed_password,
-    "is_admin": True
-}
-
-# Adding admin to mongo , if already exists prints already created admin
-try:
+# Check if admin is already create if not create in Mogno
+existing_admin = user_collection.find_one({"u_id": 1})
+if existing_admin is None:
+    # Admin doesn't exist, create admin in Mongo
+    admin_mongo = {
+        "u_id": 1,  # unique ID for admin
+        "u_username": admin_username,
+        "u_password": hashed_password,
+        "is_admin": True
+    }
     user_collection.insert_one(admin_mongo)
     print("Admin created in Mongo")
-except pymongo.errors.DuplicateKeyError:
+else:
     print("Already created admin in Mongo")
 
 
