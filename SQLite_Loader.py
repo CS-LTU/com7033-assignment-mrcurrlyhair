@@ -29,10 +29,14 @@ cur.execute('''
         p_stroke BOOLEAN NOT NULL    
     )
 ''')
-    
+
 # Cleaning bmi data 
 def bmi_cleaning(value):
-    if value.strip() == '' or value.lower == 'n/a':
+    if value.strip() == '' or value.lower() == 'n/a':  
+        return None
+    try:
+        return float(value)  
+    except ValueError:
         return None
     
 # Testing opening csv 
