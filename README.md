@@ -12,3 +12,5 @@ two databases by using the patient_id as the main link between them. Usersdata n
 tutorials and exsisting stlyesheets, i created my own style sheet which made the website look 'professional'. I had to create a changing navbar for loged in users to see thier account infomation 
 and give them the option to update this. i then added code info both my app and html which would query the database and show relvant infomtion to the user, depedning on their session id which 
 is set to be the same as their p_id and u_id. 
+
+tbc
