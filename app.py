@@ -12,7 +12,7 @@ app.secret_key = 'assignment database'
 mdb_path = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(mdb_path)
 db = client["medicalDB"]
-user_collection = db["user"]  # used for anything changing in the mongo database
+user_collection = db["user"]  
 
 # SQLite connection
 sqlite_db_path = "Database.db"
