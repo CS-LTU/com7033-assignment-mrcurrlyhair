@@ -42,7 +42,7 @@ def gen_username(lenght=18):
     word2 = random.choice(word_list)
     return word1.capitalize() + word2.capitalize()
 
-# Hashing variable 
+# Hashing function 
 def hashing_pass(text):
     text = text.encode('utf-8')
     hash = hashlib.sha256()
@@ -61,7 +61,7 @@ def get_patient_ids():
     sqlite_cur.execute("SELECT p_id FROM patient")
     return [row[0] for row in sqlite_cur.fetchall()]
 
-# 
+# Making a function stops the printing of "Already requested mongo loader" when running test_hashingpass
 def insertmongo():
     patient_ids = get_patient_ids()
     user_records = []

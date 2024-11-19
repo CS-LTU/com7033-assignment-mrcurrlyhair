@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session, redirect, url_for, abort, request, flash, get_flashed_messages, abort
+from flask import Flask, request, render_template, session, redirect, url_for, abort, flash, get_flashed_messages
 from Mongo_Loader import hashing_pass
 import pymongo
 import sqlite3

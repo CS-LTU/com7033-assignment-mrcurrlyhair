@@ -36,10 +36,10 @@ def bmi_cleaning(value):
         return None
     try:
         return float(value)  
-    except ValueError:
+    except:
         return None
     
-# Testing opening csv 
+# Open csv file
 with open(csv_path) as csv_file:
     table = csv.reader(csv_file)
     next(table)

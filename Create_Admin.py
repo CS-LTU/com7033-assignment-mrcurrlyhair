@@ -45,7 +45,7 @@ if cur.fetchone()[0] == 0:
             p_work_type, p_residence_type, p_avg_glucose_level, p_bmi,
             p_smoking_status, p_stroke
         ) 
-        VALUES (?,'Unknown', 0, 0, 0, 'No', 'Unknown', 'Unknown', 0.0, 0.0, 'Unknown', 0)
+        VALUES (?,'Admin', 0, 0, 0, 'No', 'Unknown', 'Unknown', 0.0, 0.0, 'Unknown', 0)
     ''', (1,))
     print("Admin created in SQL")
 else:
