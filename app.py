@@ -60,7 +60,7 @@ def user_info():
         default_patient = (
             patient_info if patient_info else ("N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A")
         )
-        print('test landing page')
+        print('test userinfo page')
         return render_template("UserInfo.html", user=default_user, patient=default_patient)
     
 
